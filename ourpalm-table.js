@@ -1,7 +1,7 @@
 (function (angular) {
 
     angular
-        .module('ourpalm.util.table', [])
+        .module('ourpalm-table', [])
 
         .provider('ourpalmTable', function () {
             var options = {
@@ -325,8 +325,9 @@
                             <div class="modal-dialog">
                                 <div class="modal-content modal-center-sm">
                                     <div class="modal-header">
-                                        <button type="button" class="close" data-dismiss="modal">
-                                            <span aria-hidden="true" ng-click="table.setColumns = false;">×</span></button>
+                                        <button type="button" class="close" data-dismiss="modal" ng-click="table.setColumns = false;">
+                                            <span aria-hidden="true">×</span>
+                                        </button>
                                         <h4 class="modal-title">自定义列表项</h4>
                                     </div>
                                     <div class="modal-body">
