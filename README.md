@@ -139,7 +139,7 @@
 
 [demo/demo02.html](./demo/demo02.html)
 
-[在线实例查看](http://runjs.cn/detail/nwygfmro)
+[在线实例查看](http://runjs.cn/code/nwygfmro)
 
 ![demo01.png](./img/demo01.png)
 
