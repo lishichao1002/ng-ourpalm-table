@@ -1,4 +1,4 @@
-#ourpalm-util-table
+#ourpalm-table
 
 基于angular、bootstrap的表格控件，提供了一些简单的、声明式配置
 
