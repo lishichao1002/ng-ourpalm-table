@@ -1,0 +1,210 @@
+body {
+    /*font-family: 'Open Sans', sans-serif;*/
+    font-family: Lucida Grande, Lucida Sans Unicode, Hiragino Sans GB, WenQuanYi Micro Hei, Verdana, Aril, sans-serif;
+    /*text-Shadow: 0 0 1px rgba(0, 0, 0, 0.2);*/
+    color: #58666e;
+    font-size: 13px;
+}
+
+.btn-default {
+    background-color: #F7F7F7;
+    border-radius: 2px;
+}
+
+.treeview-menu {
+    margin-top: -2px !important;
+}
+
+.text-left {
+    text-align: left !important;
+}
+
+.main-footer {
+    text-align: center;
+}
+
+/* Form Control */
+.form-control {
+    background: #fff;
+    border: 1px solid #BDC4C9;
+    display: block;
+    box-shadow: inset 0px 1px 0px #F1F0F1;
+    font-family: 'Source Sans Pro', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+.sidebar-menu .treeview-menu > li > a {
+    font-size: inherit;
+}
+
+.form-control:focus {
+    background: #f7f7f7;
+    border-color: #BDC4C9;
+    box-shadow: none;
+    border-top: 1px solid #B7B7B7;
+}
+
+.main-header .logo {
+    padding: 0px;
+}
+
+.table > tbody > tr > td, .table > tbody > tr > th, .table > tfoot > tr > td, .table > tfoot > tr > th, .table > thead > tr > td, .table > thead > tr > th {
+    vertical-align: middle;
+    padding: 6px;
+}
+
+.glyphicon {
+    display: inline-block;
+    /*font-family: FontAwesome !important;*/
+    font-feature-settings: normal;
+    font-kerning: auto;
+    font-language-override: normal;
+    font-size: inherit;
+    font-size-adjust: none;
+    font-stretch: normal;
+    font-style: normal;
+    font-synthesis: weight style;
+    font-variant: normal;
+    font-weight: normal;
+    line-height: 1;
+    text-rendering: auto;
+}
+
+.glyphicon-arrow-right::before {
+    content: "" !important;
+}
+
+.glyphicon-arrow-left::before {
+    content: "" !important;
+}
+
+.main-header {
+    position: fixed;
+    width: 100%;
+    top: 0px;
+    left: 0px;
+}
+
+.main-sidebar, .left-side {
+    position: fixed;
+}
+
+.content-header {
+    padding-top: 65px;
+}
+
+.content-header > .breadcrumb {
+    top: 65px;
+}
+
+.box-header {
+    padding: 6px;
+}
+
+.modal-center {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    width: 90%;
+    max-width: 600px;
+    max-height: 90%;
+    overflow: auto;
+    border-radius: 4px;
+    transform: translate(-50%, -50%);
+}
+
+.modal-center-lg {
+    max-width: 800px !important;
+}
+
+.modal-center-sm {
+    max-width: 400px !important;
+}
+
+.input-daterange {
+    min-width: 200px;
+}
+
+.input-daterange-lg {
+    min-width: 265px;
+}
+
+.inline-control {
+    width: 75%;
+}
+
+.inline-label {
+    width: 25%;
+    padding-top: 6px;
+    padding-right: 5px;
+    float: left;
+}
+
+.bootstrap-tagsinput {
+    width: 100%;
+    border-radius: 0px !important;
+}
+
+.bootstrap-tagsinput .label {
+    font-size: 100%;
+}
+
+table td, table th {
+    word-break: keep-all; /* 不换行 */
+    white-space: nowrap; /* 不换行 */
+    overflow: hidden;
+    text-overflow: ellipsis; /*省略号*/
+}
+
+.tooltip-inner {
+    word-break: break-all; /*只对英文起作用，以字母作为换行依据。*/
+    word-wrap: break-word; /*只对英文起作用，以单词作为换行依据。*/
+    white-space: pre-wrap; /*只对中文起作用，强制换行。*/
+    max-width: 400px !important;
+}
+
+/*  ourpalm-table-pager */
+.ourpalm-table-pager {
+    padding: 2px 4px;
+    cursor: pointer;
+    border: none;
+    background-color: inherit;
+}
+
+.ourpalm-table-pager:hover {
+    opacity: 0.6;
+}
+
+.ourpalm-table-pager:disabled {
+    opacity: 0.8;
+    cursor: default;
+}
+
+.ourpalm-dialog {
+    position: fixed;
+    width: 30%;
+    height: 30%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2001;
+}
+
+.ourpalm-mask {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0px;
+    left: 0px;
+    background-color: #000000;
+    opacity: 0.3;
+    z-index: 2000;
+}
+
+.ourpalm-table-header-sort a {
+    color: #58666e;
+    text-decoration: none;
+}
+
+.ourpalm-table-header-sort a:hover {
+    text-decoration: underline;
+}
