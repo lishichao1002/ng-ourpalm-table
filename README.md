@@ -135,7 +135,11 @@
 
 ####demo
 
-[demo01.html](./demo/demo01.html)
+[demo/demo01.html](./demo/demo01.html)
+
+[demo/demo02.html](./demo/demo02.html)
+
+[在线实例查看](http://sandbox.runjs.cn/show/nwygfmro)
 
 ![demo01.png](./img/demo01.png)
 
