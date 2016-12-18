@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>angular table</title>
+</head>
+<body>
+
+<h1>hello angular directive</h1>
+
+<div parent>
+    <div child>
+
+    </div>
+</div>
+
+<script src="../lib/angular.js"></script>
+<script>
+    angular
+            .module('app', [])
+            .directive('parent', function () {
+                return {
+                    scope: true,
+//                    controllerAs: 'parent',
+                    controller: function () {
+                        var vm = this;
+
+                        vm.currentPage = 1;
+
+                        vm.plus = function () {
+                            vm.currentPage = vm.currentPage + 1;
+                        };
+
+                        vm.sub = function () {
+                            vm.currentPage = vm.currentPage - 1;
+                        };
+                    }
+                }
+            })
+            .directive('child', function () {
+                return {
+                    template: `
+                        <div>
+                            {{parent.currentPage}}
+                            <input type="number" ng-model="currentPage" min="1" max="100"> <br/>
+
+                            <button ng-click="parent.plus();">+</button>
+                            <button ng-click="parent.sub();">-</button>
+                        </div>
+                    `,
+                    require: '^parent',
+                    link: function ($scope, $element, $attrs, parent) {
+                        $scope.parent = parent;
+                        $scope.$watch(function () {
+                            return parent.currentPage;
+                        }, function (newValue) {
+                            console.info('newValue', newValue);
+                            $scope.currentPage = newValue;
+                        })
+
+                    }
+                }
+            });
+
+    angular.bootstrap(document, ['app']);
+
+</script>
+
+</body>
+</html>

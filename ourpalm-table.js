@@ -18,7 +18,8 @@
                 pagination: true, //如果为true，则在控件底部显示分页工具栏
                 singleSelect: false, //如果为true，则只允许选择一行
                 pageList: [10, 20, 30, 40, 50], //在设置分页属性的时候 初始化页面大小选择列表
-                defaultPageSize: 10 //默认的分页大小
+                defaultPageSize: 10, //默认的分页大小
+                skipPage: true //是否允许分页控件中跳转页
             };
 
             this.setOptions = function (opts) {
@@ -219,6 +220,19 @@
                                 columns.push(col);
                         });
                     };
+                    vm.skipPageEvent = function (event) {
+                        var keyCode = window.event ? event.keyCode : event.which;
+                        if (keyCode != 13) return;
+
+                        var value = event.currentTarget.value;
+                        if (value && vm.skipPage) {
+                            value = parseInt(value);
+                            if (value >= 1 && value <= vm.allPage) {
+                                vm.currentPage = value;
+                                vm.reload();
+                            }
+                        }
+                    };
 
                     var defaultOpts = ourpalmTable.options, targetOpts = {}, userOpts = {};
                     $attrs.options && (userOpts = JSON.parse($attrs.options));
@@ -237,6 +251,9 @@
                     if ($attrs.serverSort != undefined) {
                         userOpts.serverSort = $attrs.serverSort === 'true' ? true : false;
                     }
+                    if ($attrs.skipPage != undefined) {
+                        userOpts.skipPage = $attrs.skipPage === 'true' ? true : false;
+                    }
                     angular.extend(targetOpts, defaultOpts, userOpts);
 
                     //初始配置
@@ -250,6 +267,7 @@
                     vm.pagination = targetOpts.pagination;
                     vm.serverSort = targetOpts.serverSort;
                     vm.singleSelect = targetOpts.singleSelect;
+                    vm.skipPage = targetOpts.skipPage;
 
                     //初始化table页面
                     resetPageInfo();
@@ -363,8 +381,8 @@
                                     <select ng-model="table.pageSize" class="form-control input-sm" ng-options="pageSize for pageSize in table.pageList" ng-change="table.changePageSize();" class="form-control input-sm" style="height:20px;line-height:20px;padding:0;margin-top:-2px;max-width:50px;display:inline-block;"></select>
                                     <button class="ourpalm-table-pager" ng-disabled="table.currentPage == 1" ng-click="table.gotoFirstPage();"><i class="fa fa-step-backward"></i></button><!--首页-->
                                     <button class="ourpalm-table-pager" ng-disabled="table.currentPage == 1" ng-click="table.gotoPrePage();"><i class="fa fa-backward"></i></button><!-- 上一页-->
-                                    第
-                                    <input type="text" value="{{table.currentPage}}" class="form-control input-sm" style="height:20px;line-height:20px;padding:0;margin-top:-2px;max-width:34px;display:inline-block;">
+                                    第 {{table.currentPage}}
+                                    <input type="number" ng-model="currPage" ng-keyup="table.skipPageEvent($event);" ng-readonly="!table.skipPage" min="1" max="{{table.allPage}}" class="form-control input-sm" style="height:20px;line-height:20px;padding:0;margin-top:-2px;max-width:34px;display:inline-block;">
                                     页,共{{table.allPage}}页
                                     <button class="ourpalm-table-pager" ng-disabled="table.currentPage == table.allPage" ng-click="table.gotoNextPage();"><i class="fa fa-forward"></i></button><!-- 下一页-->
                                     <button class="ourpalm-table-pager" ng-disabled="table.currentPage == table.allPage" ng-click="table.gotoLastPage();"><i class="fa fa-step-forward"></i></button><!-- 尾页-->
@@ -380,6 +398,11 @@
                 require: '^ourpalmTable',
                 link: function ($scope, $element, $attrs, table) {
                     $scope.table = table;
+                    $scope.$watch(function () {
+                        return table.currentPage;
+                    }, function (newValue) {
+                        $scope.currPage = newValue;
+                    })
                 }
             }
         })
