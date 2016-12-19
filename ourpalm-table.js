@@ -381,8 +381,8 @@
                                     <select ng-model="table.pageSize" class="form-control input-sm" ng-options="pageSize for pageSize in table.pageList" ng-change="table.changePageSize();" class="form-control input-sm" style="height:20px;line-height:20px;padding:0;margin-top:-2px;max-width:50px;display:inline-block;"></select>
                                     <button class="ourpalm-table-pager" ng-disabled="table.currentPage == 1" ng-click="table.gotoFirstPage();"><i class="fa fa-step-backward"></i></button><!--首页-->
                                     <button class="ourpalm-table-pager" ng-disabled="table.currentPage == 1" ng-click="table.gotoPrePage();"><i class="fa fa-backward"></i></button><!-- 上一页-->
-                                    第 {{table.currentPage}}
-                                    <input type="number" ng-model="currPage" ng-keyup="table.skipPageEvent($event);" ng-readonly="!table.skipPage" min="1" max="{{table.allPage}}" class="form-control input-sm" style="height:20px;line-height:20px;padding:0;margin-top:-2px;max-width:34px;display:inline-block;">
+                                    第
+                                    <input type="number" ng-model="pagination.currPage" ng-keyup="table.skipPageEvent($event);" ng-readonly="!table.skipPage" min="1" max="{{table.allPage}}" class="form-control input-sm" style="height:20px;line-height:20px;padding:0;margin-top:-2px;max-width:34px;display:inline-block;">
                                     页,共{{table.allPage}}页
                                     <button class="ourpalm-table-pager" ng-disabled="table.currentPage == table.allPage" ng-click="table.gotoNextPage();"><i class="fa fa-forward"></i></button><!-- 下一页-->
                                     <button class="ourpalm-table-pager" ng-disabled="table.currentPage == table.allPage" ng-click="table.gotoLastPage();"><i class="fa fa-step-forward"></i></button><!-- 尾页-->
@@ -403,6 +403,15 @@
                     }, function (newValue) {
                         $scope.currPage = newValue;
                     })
+                },
+                controllerAs: 'pagination',
+                controller: function ($scope) {
+                    var vm = this;
+                    $scope.$watch(function () {
+                        return $scope.table.currentPage;
+                    }, function (newValue) {
+                        vm.currPage = newValue;
+                    });
                 }
             }
         })
