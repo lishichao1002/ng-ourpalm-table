@@ -2,41 +2,89 @@
 
 基于angular、bootstrap的表格控件，提供了一些简单的、声明式配置
 
-####以简单例子开始(服务器分页)
+####以简单例子开始(服务器加载数据)
 ```xml
-<table ourpalm-table="vm.loadData(table, callback);" server-sort="false" pagination="true" single-select="false" page-list="[10, 30, 50, 100]" default-page-size="10" class="table table-bordered table-striped table-hover text-center">
+<table ourpalm-table="vm.table" class="table table-bordered table-striped table-hover text-center">
     <tr ng-repeat="$row in $rows">
-        <td table-column header="全选" field="name" sort="false" checkbox="true" sort-order="asc" style="width:30px;"></td>
-        <td table-column header="序号" field="name" sort="true" rownumbers="true" sort-order="asc" hide="true" style="width:40px;"></td>
-        <td table-column header="姓名" field="name" sort="true" checkbox="false" sort-order="asc">{{$row.name}}</td>
-        <td table-column header="年龄" field="age" sort="false" checkbox="false" sort-order="desc">{{$row.age}}</td>
+        <td table-column header="全选" field="select" checkbox="true" style="width:30px;"></td>
+        <td table-column header="序号" field="number" rownumbers="true" style="width:40px;"></td>
+        <td table-column header="姓名" field="name">{{$row.name}}</td>
+        <td table-column header="年龄" field="age">{{$row.age}}</td>
+        <td table-column header="邮箱" field="email">{{$row.email}}</td>
     </tr>
 </table>
 ```
 
 ```js
-.controller('ExampleController', function ($timeout) {
+.controller('DemoController', function ($timeout, OurpalmTable) {
     var vm = this;
-    vm.loadData = function (table, callback) {
-    	//构造假数据
-        var rows = [];
-        for (var i = 0; i < table.pageSize; i++) {
-            rows.push({
-                name: 'zhangsan' + i,
-                age: i
-            });
+
+    vm.table = new OurpalmTable({
+        loadData: function (table, callback) {
+            var options = table.getOptions();
+
+            var i = (options.currentPage - 1) * options.pageSize + 1;
+            var size = i + options.pageSize;
+            size = size > 86 ? 86 : size;
+            //构造服务器假数据
+            var rows = [];
+            for (; i < size; i++) {
+                rows.push({
+                    name: `zhangsan${i}`,
+                    age: i,
+                    email: `zhangsan${i}@163.com`
+                });
+            }
+
+            $timeout(function () {
+                callback({
+                    total: 86,
+                    rows: rows
+                });
+            }, 300);
         }
 
-        $timeout(function () {
-            callback({
-                total: 86, //总行数，用以计算分页
-                rows: rows //当前页数据
-            });
-        }, 2000);
-    };
-})
+    });
+});
 ```
 
+
+
+####以简单例子开始(内存指定数据)
+```xml
+<table ourpalm-table="vm.table" class="table table-bordered table-striped table-hover text-center">
+    <tr ng-repeat="$row in $rows">
+        <td table-column header="全选" field="select" checkbox="true" style="width:30px;"></td>
+        <td table-column header="序号" field="number" rownumbers="true" style="width:40px;"></td>
+        <td table-column header="姓名" field="name">{{$row.name}}</td>
+        <td table-column header="年龄" field="age">{{$row.age}}</td>
+        <td table-column header="邮箱" field="email">{{$row.email}}</td>
+    </tr>
+</table>
+```
+
+```js
+.controller('DemoController', function ($timeout, OurpalmTable) {
+    var vm = this;
+
+    var start = 1, end = 86;
+    //构造内存假数据
+    var rows = [];
+    for (; start < end; start++) {
+        rows.push({
+            name: `zhangsan${start}`,
+            age: start,
+            email: `zhangsan${start}@163.com`
+        });
+    }
+
+
+    vm.table = new OurpalmTable({
+        serverLoad: false,
+        data: rows
+    });
+});
+```
 
 
 
@@ -47,7 +95,7 @@
 |	pagination     		  |     boolean   	  |		true		   |	是否显示分页控件		|
 |	singleSelect    	  |     boolean   	  |		false		   |	是否限制只能选中一行			|
 |	serverSort     		  |     boolean   	  |		true	   	   |	是否要服务器排序		|
-|	serverPage            |     boolean   	  |		true		   |	是否是服务器分页	|
+|	serverLoad            |     boolean   	  |		true		   |	是否是服务器加载数据	|
 |	pageList     		  |     array 		  |	[10,20,30,40,50]   |	在设置分页属性的时候 初始化页面大小选择列表		|
 |	defaultPageSize       |     int   		  |		10			   |	在设置分页属性的时候初始化页面大小	|
 |	skipPage              |     boolean   	  |		true		   |	在设置分页属性的时候是否允许用户跳转页面	|
@@ -74,51 +122,23 @@
 
 |	方法名				  |	 参数 		      | 	            	描述 					|
 |-------------------------|-------------------|-------------------------------------------------|
-|	loadData     		  |  table, callback  |		table为表格实例,通过table可以获取运行时信息, callback是回调函数,用来加载数据; 服务器分页,返回数据格式: { total: 100, rows: [{}]}; 浏览器分页,返回的数据格式: [{}]				   |
+|	getDisplayedColumns   |                   |		 获取显示的列信息				   |
+|	getDisplayedRows      |                   |		 获取显示的行信息				   |
+|	getSelectedRows       |                   |		 获取选中的行信息				   |
+|	getSortColumns        |                   |		 获取排序的列信息				   |
+|	getOptions            |                   |		 获取表格的实时信息,如 currentPage, pageSize  |
 
 
 
 ####获取table值
-* 获取当前页 `table.currentPage`
-* 获取当前页大小 `table.pageSize`
+* 获取当前页 `table.getOptions().currentPage`
+* 获取当前页大小 `table.getOptions().pageSize`
 * 获取选中的行 `table.getSelectedRows()`
 * 获取排序的列 `table.getSortColumns()`
-* 获取显示的列 `table.getShowColumns()`
-* 获取所有列 `table.columns`
-* 获取所有行 `table.rows`
-* 重新加载数据 `table.reload()`
+* 获取显示的列 `table.getDisplayedColumns()`
+* 获取显示的行 `table.getDisplayedRows()`
 
 *注意：所有数据为只读的，不要自己修改数据*
-
-
-
-####callback给table设定每页的数据
-数据格式：
-```js
-{
-    total: 86, //total为数据总条数，用来计算分页
-    rows: [] //为当前页的数据
-}
-```
-举个栗子：
-```js
-.controller('ExampleController', function ($http) {
-    var vm = this;
-    vm.loadData = function (table, callback) {
-    	var currentPage = table.currentPage;
-        var pageSize = table.pageSize;
-        var orderInfo = table.getSortColumns();
-        $http.get('http://www.example.com/page/', {
-        	currentPage: currentPage,
-            pageSize: pageSize,
-            orderBy: 'the order by info'
-        }).success(function(result){
-        	//其中result.data的格式为{total: 100, rows: []}
-        	callback(result.data);
-        });
-    };
-})
-```
 
 
 
@@ -147,6 +167,8 @@
 [demo/demo01.html](./demo/demo01.html)
 
 [demo/demo02.html](./demo/demo02.html)
+
+[demo/demo03.html](./demo/demo03.html)
 
 [在线实例查看](http://runjs.cn/code/nwygfmro)
 

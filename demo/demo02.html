@@ -5,21 +5,22 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>angular table</title>
-    <link href="https://cdn.bootcss.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdn.bootcss.com/bootstrap/3.3.0/css/bootstrap-theme.min.css" rel="stylesheet">
-    <link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
-    <link href="https://raw.githubusercontent.com/lishichao1002/angular-table/master/ourpalm-table.css" rel="stylesheet">
+    <link href="http://cdn.bootcss.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="http://cdn.bootcss.com/bootstrap/3.3.0/css/bootstrap-theme.min.css" rel="stylesheet">
+    <link href="http://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../ourpalm-table.css">
 </head>
 <body>
 
 <div class="container" ng-controller="DemoController as vm">
-    <h1>最小配置</h1>
+    <h1>hello angular ourpalm-table！</h1>
+    <h2>内存加载数据！</h2>
 
-    <table ourpalm-table="vm.loadData(table, callback);" server-sort="false" class="table table-bordered table-striped table-hover text-center">
+    <table ourpalm-table="vm.table" class="table table-bordered table-striped table-hover text-center">
         <tr ng-repeat="$row in $rows">
-            <td table-column header="全选" field="name" checkbox="true" style="width:30px;"></td>
-            <td table-column header="序号" field="name" rownumbers="true" style="width:40px;"></td>
-            <td table-column header="姓名" field="name" sort="true">{{$row.name}}</td>
+            <td table-column header="全选" field="select" checkbox="true" style="width:30px;"></td>
+            <td table-column header="序号" field="number" rownumbers="true" style="width:40px;"></td>
+            <td table-column header="姓名" field="name">{{$row.name}}</td>
             <td table-column header="年龄" field="age">{{$row.age}}</td>
             <td table-column header="邮箱" field="email">{{$row.email}}</td>
         </tr>
@@ -28,37 +29,33 @@
 </div>
 
 
-<script src="https://cdn.bootcss.com/jquery/1.11.1/jquery.min.js"></script>
-<script src="https://cdn.bootcss.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
-<script src="https://cdn.bootcss.com/angular.js/1.5.6/angular.min.js"></script>
+<script src="http://cdn.bootcss.com/jquery/1.11.1/jquery.min.js"></script>
+<script src="http://cdn.bootcss.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+<script src="http://cdn.bootcss.com/angular.js/1.5.6/angular.min.js"></script>
 <script src="../ourpalm-table.js"></script>
 <script>
+
     angular
             .module('app', ['ourpalm-table'])
-            .controller('DemoController', function ($timeout) {
+            .controller('DemoController', function ($timeout, OurpalmTable) {
                 var vm = this;
 
-                vm.loadData = function (table, callback) {
-                    var i = (table.currentPage - 1) * table.pageSize + 1;
-                    var size = i + table.pageSize;
-                    size = size > 86 ? 86 : size;
-                    //构造假数据
-                    var rows = [];
-                    for (; i < size; i++) {
-                        rows.push({
-                            name: `zhangsan${i}`,
-                            age: i,
-                            email: `zhangsan${i}@163.com`
-                        });
-                    }
+                var start = 1, end = 86;
+                //构造内存假数据
+                var rows = [];
+                for (; start < end; start++) {
+                    rows.push({
+                        name: `zhangsan${start}`,
+                        age: start,
+                        email: `zhangsan${start}@163.com`
+                    });
+                }
 
-                    $timeout(function () {
-                        callback({
-                            total: 86, //总行数，用以计算分页
-                            rows: rows //当前页数据
-                        });
-                    }, 500);
-                };
+
+                vm.table = new OurpalmTable({
+                    serverLoad: false,
+                    data: rows
+                });
             });
 
     angular.bootstrap(document, ['app']);

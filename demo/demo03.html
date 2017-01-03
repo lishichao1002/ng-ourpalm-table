@@ -5,172 +5,102 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>angular table</title>
+    <link href="http://cdn.bootcss.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="http://cdn.bootcss.com/bootstrap/3.3.0/css/bootstrap-theme.min.css" rel="stylesheet">
+    <link href="http://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../ourpalm-table.css">
 </head>
-<body ng-controller="TestController as vm">
+<body>
 
-<h1>hello angular directive</h1>
+<div class="container" ng-controller="DemoController as vm">
+    <h1>hello angular ourpalm-table！</h1>
+    <h2>展示全部配置！</h2>
 
-<div parent>
-    <div child>
+    <table ourpalm-table="vm.table"
+           options="vm.options"
+           options="{ skipPage: true, serverSort: true, pagination: true, singleSelect: true, pageList: [10,20,30,50,100], defaultPageSize: 10 }"
+           skip-page="false"
+           server-sort="false"
+           pagination="false"
+           single-select="true"
+           page-list="[10, 30, 50, 100]"
+           default-page-size="10"
+           server-load="false"
+           class="table table-bordered table-striped table-hover text-center">
+        <tr ng-repeat="$row in $rows">
+            <td table-column header="全选" field="name" sort="false" checkbox="true" sort-order="asc" style="width:30px;"></td>
+            <td table-column header="序号" field="name" sort="false" rownumbers="true" sort-order="asc" hide="false" style="width:40px;"></td>
+            <td table-column header="姓名" field="name" sort="true" checkbox="false" sort-order="asc">{{$row.name}}</td>
+            <td table-column header="年龄" field="age" sort="true" checkbox="false" sort-order="desc">{{$row.age}}</td>
+            <td table-column header="邮箱" field="email" sort="false" checkbox="false" sort-order="desc">{{$row.email}}</td>
+        </tr>
+    </table>
 
-    </div>
 </div>
 
-<script src="../lib/angular.js"></script>
+
+<script type="text/javascript" src="http://cdn.bootcss.com/jquery/1.11.1/jquery.min.js"></script>
+<script type="text/javascript" src="http://cdn.bootcss.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="http://cdn.bootcss.com/angular.js/1.5.6/angular.min.js"></script>
+<script type="text/javascript" src="../ourpalm-table.js"></script>
 <script>
+
     angular
-            .module('app', [])
-            .factory('OurpalmTable', function () {
-                function OurpalmTable(opts) {
-                    var table = this;
-
-                    var defaults = {
-                        singleSelect: false
-                    }, options = {};
-
-                    //当前页的信息
-                    var page = {
-                        allBoxChecked: false, //默认checkbox不选中
-                        pageSize: 10, //默认每页加载10条
-                        currentPage: 1, //默认加载第一页
-                        pageList: [10, 20, 30, 50, 100], //默认分页信息
-                        total: 0, //总共有几条数据
-                        rows: [], //当页显示的数据
-                        columns: [], //列的配置信息
-                        pagination: true, //是否启用分页
-                        serverPage: true, //是否服务器分页
-                        serverSort: true, //是否服务器排序
-                        singleSelect: false, //是否只能选中一行
-                        skipPage: true, //是否可以跳转页面
-                        allPage: 1 //总共有几页
-                    };
-
-                    /* 共有方法 public */
-
-                    /**
-                     * 获取配置信息
-                     */
-                    table.getOptions = function () {
-                        return options;
-                    };
-
-                    /**
-                     * 获取当前选中的所有行
-                     */
-                    table.getSelectedRows = function () {
-                        return [];
-                    };
-
-                    /**
-                     * 获取本页所有行
-                     */
-                    table.getDisplayedRows = function () {
-
-                    };
-
-                    /**
-                     * 获取当前排序的列信息
-                     */
-                    table.getSortColumns = function () {
-                        return [];
-                    };
-
-                    /**
-                     * 获取当前显示的列信息
-                     */
-                    table.getDisplayedColumns = function () {
-                        return [];
-                    };
-
-
-                    /* 私有方法 private */
-
-                    var setOptions = function (pageOptions) {
-
-                    };
-
-                    var buildData = function () {
-
-                    };
-
-                    var onDataLoadSuccess = function (result) {
-                        result = {
-                            total: 0,
-                            rows: []
-                        };
-                    };
-
-                    var onAllCheckBoxChange = function () {
-
-                    };
-
-                    var onRowCheckBoxChange = function () {
-
-                    };
-
-                    var gotoFirstPage = function () {
-
-                    };
-
-                    var gotoPrePage = function () {
-
-                    };
-
-                    var gotoNextPage = function () {
-
-                    };
-
-                    var gotoLastPage = function () {
-
-                    };
-
-                    var gotoSkipPage = function (pageSize) {
-
-                    };
-
-                    var sortColumn = function (column) {
-
-                    };
-
-                    table.__table__ = function () {
-                        return function (pageOptions) {
-                            return {
-                                setOptions: setOptions,
-                                buildData: buildData,
-                                options: options,
-
-                                onAllCheckBoxChange: onAllCheckBoxChange,
-                                onRowCheckBoxChange: onRowCheckBoxChange,
-                                gotoFirstPage: gotoFirstPage,
-                                gotoPrePage: gotoPrePage,
-                                gotoNextPage: gotoNextPage,
-                                gotoLastPage: gotoLastPage,
-                                gotoSkipPage: gotoSkipPage,
-                                sortColumn: sortColumn
-                            }
-                        }
-                    };
-                }
-
-                return OurpalmTable;
-            })
-
-            .controller('TestController', function (OurpalmTable) {
+            .module('app', ['ourpalm-table'])
+            .controller('DemoController', function ($timeout, OurpalmTable) {
                 var vm = this;
 
-                vm.table1 = new OurpalmTable({
-                    name: 'table1'
+                vm.table = new OurpalmTable({
+                    skipPage: true,
+                    serverSort: false,
+                    pagination: true,
+                    serverLoad: true,
+                    singleSelect: false,
+                    pageList: [10, 20, 30],
+                    defaultPageSize: 10,
+                    //data: rows, //内存加载数据
+                    loadData: function (table, callback) {
+                        var options = table.getOptions();
+
+                        var i = (options.currentPage - 1) * options.pageSize + 1;
+                        var size = i + options.pageSize;
+                        size = size > 86 ? 86 : size;
+                        //构造服务器假数据
+                        var rows = [];
+                        for (; i < size; i++) {
+                            rows.push({
+                                name: `zhangsan${i}`,
+                                age: i,
+                                email: `zhangsan${i}@163.com`
+                            });
+                        }
+
+                        $timeout(function () {
+                            callback({
+                                total: 86,
+                                rows: rows
+                            });
+                        }, 300);
+                    }
                 });
 
-                vm.table2 = new OurpalmTable({
-                    name: 'table2'
-                });
+                vm.options = {
+                    skipPage: false,
+                    serverSort: false,
+                    pagination: false,
+                    singleSelect: true,
+                    pageList: [10, 20, 30, 50, 100],
+                    defaultPageSize: 100
+                };
 
-                console.info(vm.table1);
-                console.info(vm.table2);
-
+                $timeout(function () {
+                    console.info('getDisplayedColumns', vm.table.getDisplayedColumns());
+                    console.info('getDisplayedRows', vm.table.getDisplayedRows());
+                    console.info('getOptions', vm.table.getOptions());
+                    console.info('getSelectedRows', vm.table.getSelectedRows());
+                    console.info('getSortColumns', vm.table.getSortColumns());
+                }, 5000);
             });
-
 
     angular.bootstrap(document, ['app']);
 
