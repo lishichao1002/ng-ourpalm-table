@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>angular table</title>
 </head>
-<body>
+<body ng-controller="TestController as vm">
 
 <h1>hello angular directive</h1>
 
@@ -20,49 +20,157 @@
 <script>
     angular
             .module('app', [])
-            .directive('parent', function () {
-                return {
-                    scope: true,
-//                    controllerAs: 'parent',
-                    controller: function () {
-                        var vm = this;
+            .factory('OurpalmTable', function () {
+                function OurpalmTable(opts) {
+                    var table = this;
 
-                        vm.currentPage = 1;
+                    var defaults = {
+                        singleSelect: false
+                    }, options = {};
 
-                        vm.plus = function () {
-                            vm.currentPage = vm.currentPage + 1;
+                    //当前页的信息
+                    var page = {
+                        allBoxChecked: false, //默认checkbox不选中
+                        pageSize: 10, //默认每页加载10条
+                        currentPage: 1, //默认加载第一页
+                        pageList: [10, 20, 30, 50, 100], //默认分页信息
+                        total: 0, //总共有几条数据
+                        rows: [], //当页显示的数据
+                        columns: [], //列的配置信息
+                        pagination: true, //是否启用分页
+                        serverPage: true, //是否服务器分页
+                        serverSort: true, //是否服务器排序
+                        singleSelect: false, //是否只能选中一行
+                        skipPage: true, //是否可以跳转页面
+                        allPage: 1 //总共有几页
+                    };
+
+                    /* 共有方法 public */
+
+                    /**
+                     * 获取配置信息
+                     */
+                    table.getOptions = function () {
+                        return options;
+                    };
+
+                    /**
+                     * 获取当前选中的所有行
+                     */
+                    table.getSelectedRows = function () {
+                        return [];
+                    };
+
+                    /**
+                     * 获取本页所有行
+                     */
+                    table.getDisplayedRows = function () {
+
+                    };
+
+                    /**
+                     * 获取当前排序的列信息
+                     */
+                    table.getSortColumns = function () {
+                        return [];
+                    };
+
+                    /**
+                     * 获取当前显示的列信息
+                     */
+                    table.getDisplayedColumns = function () {
+                        return [];
+                    };
+
+
+                    /* 私有方法 private */
+
+                    var setOptions = function (pageOptions) {
+
+                    };
+
+                    var buildData = function () {
+
+                    };
+
+                    var onDataLoadSuccess = function (result) {
+                        result = {
+                            total: 0,
+                            rows: []
                         };
+                    };
 
-                        vm.sub = function () {
-                            vm.currentPage = vm.currentPage - 1;
-                        };
-                    }
+                    var onAllCheckBoxChange = function () {
+
+                    };
+
+                    var onRowCheckBoxChange = function () {
+
+                    };
+
+                    var gotoFirstPage = function () {
+
+                    };
+
+                    var gotoPrePage = function () {
+
+                    };
+
+                    var gotoNextPage = function () {
+
+                    };
+
+                    var gotoLastPage = function () {
+
+                    };
+
+                    var gotoSkipPage = function (pageSize) {
+
+                    };
+
+                    var sortColumn = function (column) {
+
+                    };
+
+                    table.__table__ = function () {
+                        return function (pageOptions) {
+                            return {
+                                setOptions: setOptions,
+                                buildData: buildData,
+                                options: options,
+
+                                onAllCheckBoxChange: onAllCheckBoxChange,
+                                onRowCheckBoxChange: onRowCheckBoxChange,
+                                gotoFirstPage: gotoFirstPage,
+                                gotoPrePage: gotoPrePage,
+                                gotoNextPage: gotoNextPage,
+                                gotoLastPage: gotoLastPage,
+                                gotoSkipPage: gotoSkipPage,
+                                sortColumn: sortColumn
+                            }
+                        }
+                    };
                 }
+
+                return OurpalmTable;
             })
-            .directive('child', function () {
-                return {
-                    template: `
-                        <div>
-                            {{parent.currentPage}}
-                            <input type="number" ng-model="currentPage" min="1" max="100"> <br/>
 
-                            <button ng-click="parent.plus();">+</button>
-                            <button ng-click="parent.sub();">-</button>
-                        </div>
-                    `,
-                    require: '^parent',
-                    link: function ($scope, $element, $attrs, parent) {
-                        $scope.parent = parent;
-                        $scope.$watch(function () {
-                            return parent.currentPage;
-                        }, function (newValue) {
-                            console.info('newValue', newValue);
-                            $scope.currentPage = newValue;
-                        })
+            .controller('TestController', function (OurpalmTable) {
+                var vm = this;
 
-                    }
-                }
+                vm.table1 = new OurpalmTable({
+                    name: 'table1'
+                });
+
+                vm.table2 = new OurpalmTable({
+                    name: 'table2'
+                });
+
+                console.info(vm.table1);
+                console.info(vm.table2);
+
             });
+
 
     angular.bootstrap(document, ['app']);
 

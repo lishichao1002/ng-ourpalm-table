@@ -2,7 +2,7 @@
 
 基于angular、bootstrap的表格控件，提供了一些简单的、声明式配置
 
-####以简单例子开始
+####以简单例子开始(服务器分页)
 ```xml
 <table ourpalm-table="vm.loadData(table, callback);" server-sort="false" pagination="true" single-select="false" page-list="[10, 30, 50, 100]" default-page-size="10" class="table table-bordered table-striped table-hover text-center">
     <tr ng-repeat="$row in $rows">
@@ -47,6 +47,7 @@
 |	pagination     		  |     boolean   	  |		true		   |	是否显示分页控件		|
 |	singleSelect    	  |     boolean   	  |		false		   |	是否限制只能选中一行			|
 |	serverSort     		  |     boolean   	  |		true	   	   |	是否要服务器排序		|
+|	serverPage            |     boolean   	  |		true		   |	是否是服务器分页	|
 |	pageList     		  |     array 		  |	[10,20,30,40,50]   |	在设置分页属性的时候 初始化页面大小选择列表		|
 |	defaultPageSize       |     int   		  |		10			   |	在设置分页属性的时候初始化页面大小	|
 |	skipPage              |     boolean   	  |		true		   |	在设置分页属性的时候是否允许用户跳转页面	|
@@ -67,6 +68,13 @@
 |	checkbox		      |     boolean		  |		false		   |	是否为多选列				|
 |	rownumbers		      |     boolean		  |		false		   |	是否是行号列				|
 
+
+
+####方法
+
+|	方法名				  |	 参数 		      | 	            	描述 					|
+|-------------------------|-------------------|-------------------------------------------------|
+|	loadData     		  |  table, callback  |		table为表格实例,通过table可以获取运行时信息, callback是回调函数,用来加载数据; 服务器分页,返回数据格式: { total: 100, rows: [{}]}; 浏览器分页,返回的数据格式: [{}]				   |
 
 
 

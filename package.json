@@ -1,0 +1,32 @@
+{
+  "name": "angular-table",
+  "version": "1.0.0",
+  "description": "angular table, datagrid",
+  "main": "ourpalm-table.js",
+  "scripts": {
+    "start": "http-server -a 0.0.0.0 -p 8000 -c-1 ./",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lishichao1002/angular-table.git"
+  },
+  "keywords": [
+    "angular",
+    "table",
+    "datagrid",
+    "bootstrap"
+  ],
+  "author": "lishichao",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/lishichao1002/angular-table/issues"
+  },
+  "homepage": "https://github.com/lishichao1002/angular-table#readme",
+  "dependencies": {
+    "angular": "1.5.7"
+  },
+  "devDependencies": {
+    "http-server": "0.9.0"
+  }
+}
