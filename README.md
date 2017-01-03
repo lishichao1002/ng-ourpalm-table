@@ -132,7 +132,7 @@
 
 ####获取table值
 * 获取当前页 `table.getOptions().currentPage`
-* 获取当前页大小 `table.getOptions().pageSize`
+* 获取页大小 `table.getOptions().pageSize`
 * 获取选中的行 `table.getSelectedRows()`
 * 获取排序的列 `table.getSortColumns()`
 * 获取显示的列 `table.getDisplayedColumns()`
@@ -147,11 +147,6 @@
 * 表属性和列属性的名字，在html标签中将驼峰命名改为-分隔命名，如：
  1. `<td pageList="[10,20,30]"></td>` 应写为 `<td page-list="[10,20,30]"></td>`
  2. `<td defaultPageSize="10"></td>` 应写为 `<td default-page-size="10"></td>`
-
-* **loadData(table, callback)**参数名字必须为**table**和**callback**，如：
- 1. `<table ourpalm-table="vm.loadData(table, callback);" ></table>`
- 2. `<table ourpalm-table="loadData(table, callback);" ></table>`
- 3. `<table ourpalm-table="vm.loadData(table, callback);" ></table>`
 
 * **ng-repeat**中的行数据名称必须要**$row**和**$rows**，如：
  1. `<tr ng-repeat="$row in $rows"></tr>`
