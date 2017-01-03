@@ -88,6 +88,92 @@
 
 
 
+####全部配置项
+```xml
+<table ourpalm-table="vm.table"
+       //配置方式一
+       options="vm.options"
+       //配置方式二
+       options="{ skipPage: true, serverSort: true, pagination: true, singleSelect: true, pageList: [10,20,30,50,100], defaultPageSize: 10 }"
+       //配置方式三
+       skip-page="false"
+       server-sort="false"
+       pagination="false"
+       single-select="true"
+       page-list="[10, 30, 50, 100]"
+       default-page-size="10"
+       server-load="false"
+       class="table table-bordered table-striped table-hover text-center">
+    <tr ng-repeat="$row in $rows">
+        <td table-column header="全选" field="name" sort="false" checkbox="true" sort-order="asc" style="width:30px;"></td>
+        <td table-column header="序号" field="name" sort="false" rownumbers="true" sort-order="asc" hide="false" style="width:40px;"></td>
+        <td table-column header="姓名" field="name" sort="true" checkbox="false" sort-order="asc">{{$row.name}}</td>
+        <td table-column header="年龄" field="age" sort="true" checkbox="false" sort-order="desc">{{$row.age}}</td>
+        <td table-column header="邮箱" field="email" sort="false" checkbox="false" sort-order="desc">{{$row.email}}</td>
+    </tr>
+</table>
+```
+
+```js
+.controller('DemoController', function ($timeout, OurpalmTable) {
+    var vm = this;
+
+    vm.table = new OurpalmTable({
+        //配置方式四
+        skipPage: true,
+        serverSort: false,
+        pagination: true,
+        singleSelect: false,
+        pageList: [10, 20, 30],
+        defaultPageSize: 10,
+        serverLoad: true,
+        //data: rows, //内存加载数据 serverLoad:false
+        loadData: function (table, callback) {
+            var options = table.getOptions();
+
+            var i = (options.currentPage - 1) * options.pageSize + 1;
+            var size = i + options.pageSize;
+            size = size > 86 ? 86 : size;
+            //构造服务器假数据
+            var rows = [];
+            for (; i < size; i++) {
+                rows.push({
+                    name: `zhangsan${i}`,
+                    age: i,
+                    email: `zhangsan${i}@163.com`
+                });
+            }
+
+            $timeout(function () {
+                callback({
+                    total: 86,
+                    rows: rows
+                });
+            }, 300);
+        }
+    });
+
+    vm.options = {
+        skipPage: false,
+        serverSort: false,
+        pagination: false,
+        singleSelect: true,
+        pageList: [10, 20, 30, 50, 100],
+        defaultPageSize: 100
+    };
+
+    $timeout(function () {
+        console.info('getDisplayedColumns', vm.table.getDisplayedColumns());
+        console.info('getDisplayedRows', vm.table.getDisplayedRows());
+        console.info('getOptions', vm.table.getOptions());
+        console.info('getSelectedRows', vm.table.getSelectedRows());
+        console.info('getSortColumns', vm.table.getSortColumns());
+    }, 5000);
+});
+```
+
+
+
 ####表属性
 
 |	属性名				  |	 属性值类型 		  | 	   默认值 	   |		描述 					|
@@ -159,11 +245,11 @@
 
 ####demo
 
-[demo/demo01.html](./demo/demo01.html)
+[简单配置-服务器加载数据](./demo/demo01.html)
 
-[demo/demo02.html](./demo/demo02.html)
+[简单配置-内存加载数据](./demo/demo02.html)
 
-[demo/demo03.html](./demo/demo03.html)
+[全部配置](./demo/demo03.html)
 
 [在线实例查看](http://runjs.cn/code/nwygfmro)
 
