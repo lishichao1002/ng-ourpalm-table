@@ -245,13 +245,13 @@
 
 ####demo
 
-[简单配置-服务器加载数据](./demo/demo01.html)
+[简单配置-服务器加载数据](./demo/demo01.html) [在线实例](http://runjs.cn/code/nwygfmro)
 
-[简单配置-内存加载数据](./demo/demo02.html)
+[简单配置-内存加载数据](./demo/demo02.html) [在线实例](http://runjs.cn/code/7ifusq0w)
 
-[全部配置](./demo/demo03.html)
+[全部配置](./demo/demo03.html) [在线实例](http://runjs.cn/code/kcufklvq)
 
-[在线实例查看](http://runjs.cn/code/nwygfmro)
+
 
 ![demo01.png](./img/demo01.png)
 
