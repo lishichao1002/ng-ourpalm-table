@@ -200,7 +200,6 @@
 |	rownumbers		      |     boolean		  |		false		   |	是否为行号列 1...*				|
 |	hide			      |     boolean		  |		false		   |	是否隐藏列				|
 |	checkbox		      |     boolean		  |		false		   |	是否为多选列				|
-|	rownumbers		      |     boolean		  |		false		   |	是否是行号列				|
 
 
 
