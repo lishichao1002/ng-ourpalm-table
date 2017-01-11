@@ -16,7 +16,7 @@
                     sortOrder: 'asc', //定义列的排序顺序，只能是'asc'或'desc'
                     checkbox: false, //定义该列是否是checkbox
                     rownumbers: false, //如果为true，则显示一个行号列
-                    hide: false //定义是否隐藏列
+                    show: true //定义是否隐藏列
                 },
                 serverSort: true, //是否是服务器端排序
                 serverLoad: true, //服务器分页
@@ -24,7 +24,10 @@
                 singleSelect: false, //如果为true，则只允许选择一行
                 pageList: [10, 20, 30, 40, 50], //在设置分页属性的时候 初始化页面大小选择列表
                 defaultPageSize: 10, //默认的分页大小
-                skipPage: true //是否允许分页控件中跳转页
+                skipPage: true, //是否允许分页控件中跳转页
+                cacheKey: '', //指定cache时的key
+                cachePageSize: false, //是否缓存页大小
+                cacheColumns: false //是否缓存列的隐藏显示
             };
 
             this.setOptions = function (opts) {
@@ -56,7 +59,10 @@
                     serverSort: true, //是否服务器排序
                     singleSelect: false, //是否只能选中一行
                     skipPage: true, //是否可以跳转页面
-                    allPage: 1 //总共有几页
+                    allPage: 1, //总共有几页
+                    cacheKey: '', //指定cache时的key
+                    cachePageSize: false, //是否缓存页大小
+                    cacheColumns: false //是否缓存列的隐藏显示
                 };
 
                 var __listeners = [];
@@ -110,10 +116,14 @@
                 table.getDisplayedColumns = function () {
                     var columns = [];
                     angular.forEach(context.columns, function (col) {
-                        if (!col.hide)
+                        if (col.show)
                             columns.push(col);
                     });
                     return columns;
+                };
+
+                table.reload = function () {
+                    reload();
                 };
 
 
@@ -135,6 +145,66 @@
                     } else { //页面初始化数据
                         __onMemoryDataLoadSuccess();
                     }
+                };
+
+                var __loadCacheColumns = function () {
+                    if (!window.localStorage) return;
+                    if (!context.cacheKey) return;
+                    if (!context.cacheColumns) return;
+                    var key = [context.cacheKey, 'columns'].join('-');
+                    var json = window.localStorage.getItem(key);
+                    if (json != undefined) {
+                        var columnObj = angular.fromJson(json);
+                        angular.forEach(context.columns, function (column, index) {
+                            var field = column.field || 'column' + index;
+                            if (columnObj[field] != undefined) {
+                                column.show = columnObj[field];
+                            }
+                        });
+                    } else {
+                        var columnObj = {};
+                        angular.forEach(context.columns, function (column, index) {
+                            var field = column.field || 'column' + index;
+                            columnObj[field] = column.show;
+                        });
+                        window.localStorage.setItem(key, JSON.stringify(columnObj));
+                    }
+                };
+
+                var __loadPageSize = function () {
+                    if (!window.localStorage) return;
+                    if (!context.cacheKey) return;
+                    if (!context.cachePageSize) return;
+                    var key = [context.cacheKey, 'pageSize'].join('-');
+                    var pageSize = window.localStorage.getItem(key);
+                    if (pageSize != undefined) {
+                        pageSize = parseInt(pageSize);
+                        context.pageSize = context.defaultPageSize = pageSize;
+                    } else {
+                        pageSize = context.defaultPageSize || context.pageList[0];
+                        window.localStorage.setItem(key, pageSize);
+                    }
+                };
+
+                var __storePageSize = function () {
+                    if (!window.localStorage) return;
+                    if (!context.cacheKey) return;
+                    if (!context.cachePageSize) return;
+                    var key = [context.cacheKey, 'pageSize'].join('-');
+                    window.localStorage.setItem(key, context.pageSize);
+                };
+
+                var __storeColumns = function () {
+                    if (!window.localStorage) return;
+                    if (!context.cacheKey) return;
+                    if (!context.cacheColumns) return;
+                    var key = [context.cacheKey, 'columns'].join('-');
+                    var columnObj = {};
+                    angular.forEach(context.columns, function (column, index) {
+                        var field = column.field || 'column' + index;
+                        columnObj[field] = column.show;
+                    });
+                    window.localStorage.setItem(key, JSON.stringify(columnObj));
                 };
 
                 /**
@@ -240,6 +310,7 @@
 
                 var changePageSize = function () {
                     context.currentPage = 1;
+                    __storePageSize();
                     __loadData();
                 };
 
@@ -269,13 +340,20 @@
                     }
                 };
 
-                var setColumns = function (columns) {
+                var buildColumns = function (columns) {
                     context.columns = columns;
+                    __loadCacheColumns();
+                    return context.columns;
+                };
+
+                var toggleColumn = function () {
+                    __storeColumns();
                 };
 
                 table.__table__ = function () {
                     return function (defaultOpts, pageOptions) {
                         __setOptions(defaultOpts, pageOptions);
+                        __loadPageSize();
 
                         return {
                             onHeaderCheckBoxChange: onHeaderCheckBoxChange,
@@ -288,7 +366,8 @@
                             changePageSize: changePageSize,
                             reload: reload,
                             sortColumn: sortColumn,
-                            setColumns: setColumns,
+                            buildColumns: buildColumns,
+                            toggleColumn: toggleColumn,
                             registerDataChangeListener: registerDataChangeListener,
                             initPage: initPage,
                             context: context
@@ -315,7 +394,7 @@
                 compile: function ($element, $attrs) {
                     var getColumns = function (thead) {
                         var columns = [];
-                        $(thead).find('td[table-column]').each(function (index) {
+                        $(thead).find('td').each(function (index) {
                             var $td = $(this);
                             //read from td element
                             var tableColumn = $td.attr('table-column');
@@ -325,14 +404,14 @@
                             var checkbox = $td.attr('checkbox');
                             var sortOrder = $td.attr('sort-order');
                             var rownumbers = $td.attr('rownumbers');
-                            var hide = $td.attr('hide');
+                            var show = $td.attr('show');
 
                             //convert data type
                             tableColumn = tableColumn ? JSON.parse(tableColumn) : {};
                             sort = sort === 'true' ? true : false;
                             checkbox = checkbox === 'true' ? true : false;
                             rownumbers = rownumbers === 'true' ? true : false;
-                            hide = hide === 'true' ? true : false;
+                            show = show === 'false' ? false : true;
 
                             //build value
                             var target = {}, userColumn = {}, defaultColumn = ourpalmTable.options.column;
@@ -343,12 +422,12 @@
                                 checkbox: checkbox,
                                 sortOrder: sortOrder,
                                 rownumbers: rownumbers,
-                                hide: hide
+                                show: show
                             });
                             angular.extend(target, defaultColumn, userColumn);
                             columns.push(target);
 
-                            $td.attr('ng-hide', `$columns[${index}].hide`);
+                            $td.attr('ng-show', `$columns[${index}].show`);
 
                             if (target.checkbox) {
                                 return $td.html('<input type="checkbox" ng-model="$row.__checked__" ng-change="$onRowCheckBoxChange($row);" />');
@@ -391,10 +470,13 @@
                     parseAttrs(pageOptions, 'defaultPageSize');
                     parseAttrs(pageOptions, 'skipPage');
                     parseAttrs(pageOptions, 'serverLoad');
+                    parseAttrs(pageOptions, 'cacheKey');
+                    parseAttrs(pageOptions, 'cachePageSize');
+                    parseAttrs(pageOptions, 'cacheColumns');
 
                     var table = $parse($attrs.ourpalmTable)($scope.$parent); //获取table的共有方法
                     vm.table = table.__table__()(defaultOpts, pageOptions); //获取table的私有方法
-                    vm.table.setColumns(columns);
+                    columns = vm.table.buildColumns(columns);
                     vm.table.registerDataChangeListener(function () {
                         $timeout(function () {
                             $scope.$rows = vm.table.context.rows;
@@ -421,7 +503,7 @@
                 template: `
                     <thead>
                         <tr>
-                            <th ng-repeat="col in table.context.columns" ng-hide="col.hide">
+                            <th ng-repeat="col in table.context.columns" ng-show="col.show">
                                 <!-- 非 checkbox 列 -->  
                                 <span ng-if="col.checkbox == false" class="ourpalm-table-header-sort">
                                     <!-- 非序号列 -->
@@ -481,7 +563,7 @@
                                     </div>
                                     <div class="modal-body">
                                         <label class="checkbox-inline" ng-repeat="col in table.context.columns">
-                                            <input type="checkbox" ng-model="col.hide">{{col.header}}
+                                            <input type="checkbox" ng-model="col.show" ng-click="table.toggleColumn();">{{col.header}}
                                         </label>
                                     </div>
                                 </div>

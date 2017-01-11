@@ -185,6 +185,9 @@
 |	pageList     		  |     array 		  |	[10,20,30,40,50]   |	在设置分页属性的时候 初始化页面大小选择列表		|
 |	defaultPageSize       |     int   		  |		10			   |	在设置分页属性的时候初始化页面大小	|
 |	skipPage              |     boolean   	  |		true		   |	在设置分页属性的时候是否允许用户跳转页面	|
+|	cacheKey              |     string   	  |		''  		   |	在设置分页属性的时候是否允许用户跳转页面	|
+|	cachePageSize         |     boolean   	  |		false		   |	是否在客户端存储table的页大小,刷新的时候页大小不变,保存在localStorage中,key为${cacheKey}-pageSize	|
+|	cacheColumns          |     boolean   	  |		false		   |	是否在客户端存在table的列隐藏信息,刷新的时候列的隐藏信息不变,保存在localStorage中,key为${cacheKey}-columns	|
 
 
 
@@ -198,7 +201,7 @@
 |	sort	     		  |     boolean   	  |		false	   	   |	是否列排序				 |
 |	sortOrder     		  |     string 		  |		asc			   |	列排序方向,取值 asc 或 desc	|
 |	rownumbers		      |     boolean		  |		false		   |	是否为行号列 1...*				|
-|	hide			      |     boolean		  |		false		   |	是否隐藏列				|
+|	show			      |     boolean		  |		true		   |	是否隐藏列				|
 |	checkbox		      |     boolean		  |		false		   |	是否为多选列				|
 
 
