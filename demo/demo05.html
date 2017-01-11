@@ -14,6 +14,7 @@
 
 <div class="container" ng-controller="DemoController as vm">
     <h1>hello angular ourpalm-table！</h1>
+    <h2>展示全部配置！</h2>
 
     <table ourpalm-table="vm.table"
            options="vm.options"
@@ -24,14 +25,17 @@
            single-select="true"
            page-list="[10, 30, 50, 100]"
            default-page-size="10"
-           server-page="false"
+           server-load="false"
            class="table table-bordered table-striped table-hover text-center">
-        <tr ng-repeat="$row in $rows">
-            <td table-column header="全选" field="name" sort="false" checkbox="true" sort-order="asc" style="width:30px;"></td>
-            <td table-column header="序号" field="name" sort="false" rownumbers="true" sort-order="asc" hide="false" style="width:40px;"></td>
+        <tr ng-repeat="$row in $rows" ng-dblclick="vm.show();">
+            <td table-column header="全选" field="select" sort="false" checkbox="true" sort-order="asc" style="width:30px;"></td>
+            <td table-column header="序号" field="numbers" sort="false" rownumbers="true" sort-order="asc" hide="false" style="width:40px;"></td>
             <td table-column header="姓名" field="name" sort="true" checkbox="false" sort-order="asc">{{$row.name}}</td>
             <td table-column header="年龄" field="age" sort="true" checkbox="false" sort-order="desc">{{$row.age}}</td>
             <td table-column header="邮箱" field="email" sort="false" checkbox="false" sort-order="desc">{{$row.email}}</td>
+            <td table-column header="操作" field="email" sort="false" checkbox="false" sort-order="desc">
+                <button ng-click="show();">详情</button>
+            </td>
         </tr>
     </table>
 
@@ -45,61 +49,72 @@
 <script>
 
     angular
-            .module('app', ['ourpalm-table'])
-            .controller('DemoController', function ($timeout, OurpalmTable) {
-                var vm = this;
+        .module('app', ['ourpalm-table'])
+        .controller('DemoController', function ($timeout, OurpalmTable, $scope) {
+            var vm = this;
 
-                vm.table = new OurpalmTable({
-                    skipPage: true,
-                    serverSort: false,
-                    pagination: true,
-                    serverPage: true,
-                    singleSelect: false,
-                    pageList: [10, 20, 30],
-                    defaultPageSize: 10,
-                    //data: rows, //内存加载数据
-                    loadData: function (table, callback) {
-                        var options = table.getOptions();
+            $scope.show = function () {
+                console.info('scope.show');
+            };
 
-                        var i = (options.currentPage - 1) * options.pageSize + 1;
-                        var size = i + options.pageSize;
-                        size = size > 86 ? 86 : size;
-                        //构造服务器假数据
-                        var rows = [];
-                        for (; i < size; i++) {
-                            rows.push({
-                                name: `zhangsan${i}`,
-                                age: i,
-                                email: `zhangsan${i}@163.com`
-                            });
-                        }
+            vm.show = function () {
+                console.info('vm.show');
+            };
 
-                        $timeout(function () {
-                            callback({
-                                total: 86,
-                                rows: rows
-                            });
-                        }, 300);
+            vm.table = new OurpalmTable({
+                cacheKey: 'table01',
+                cachePageSize: true,
+                cacheColumns: true,
+                skipPage: true,
+                serverSort: false,
+                pagination: true,
+                serverLoad: true,
+                singleSelect: false,
+                pageList: [10, 20, 30],
+                defaultPageSize: 10,
+                //data: rows, //内存加载数据
+                loadData: function (table, callback) {
+                    var options = table.getOptions();
+
+                    var i = (options.currentPage - 1) * options.pageSize + 1;
+                    var size = i + options.pageSize;
+                    size = size > 86 ? 86 : size;
+                    //构造服务器假数据
+                    var rows = [];
+                    for (; i < size; i++) {
+                        rows.push({
+                            name: `zhangsan${i}`,
+                            age: i,
+                            email: `zhangsan${i}@163.com`
+                        });
                     }
-                });
 
-                vm.options = {
-                    skipPage: false,
-                    serverSort: false,
-                    pagination: false,
-                    singleSelect: true,
-                    pageList: [10, 20, 30, 50, 100],
-                    defaultPageSize: 100
-                };
-
-                $timeout(function () {
-                    console.info('getDisplayedColumns', vm.table.getDisplayedColumns());
-                    console.info('getDisplayedRows', vm.table.getDisplayedRows());
-                    console.info('getOptions', vm.table.getOptions());
-                    console.info('getSelectedRows', vm.table.getSelectedRows());
-                    console.info('getSortColumns', vm.table.getSortColumns());
-                }, 5000);
+                    $timeout(function () {
+                        callback({
+                            total: 86,
+                            rows: rows
+                        });
+                    }, 300);
+                }
             });
+
+            vm.options = {
+                skipPage: false,
+                serverSort: false,
+                pagination: false,
+                singleSelect: true,
+                pageList: [10, 20, 30, 50, 100],
+                defaultPageSize: 100
+            };
+
+//            $timeout(function () {
+//                console.info('getDisplayedColumns', vm.table.getDisplayedColumns());
+//                console.info('getDisplayedRows', vm.table.getDisplayedRows());
+//                console.info('getOptions', vm.table.getOptions());
+//                console.info('getSelectedRows', vm.table.getSelectedRows());
+//                console.info('getSortColumns', vm.table.getSortColumns());
+//            }, 5000);
+        });
 
     angular.bootstrap(document, ['app']);
 

@@ -439,15 +439,15 @@
                         return columns;
                     };
                     columns = getColumns($element);
-                    $element.prepend('<ourpalm-table-header table="vm.table"></ourpalm-table-header>');
-                    $element.append('<ourpalm-table-pagination table="vm.table"></ourpalm-table-pagination>');
-                    $element.append('<ourpalm-table-set-columns table="vm.table"></ourpalm-table-set-columns>');
+                    $element.prepend('<ourpalm-table-header table="ourpalmTableController.table"></ourpalm-table-header>');
+                    $element.append('<ourpalm-table-pagination table="ourpalmTableController.table"></ourpalm-table-pagination>');
+                    $element.append('<ourpalm-table-set-columns table="ourpalmTableController.table"></ourpalm-table-set-columns>');
                     return {
                         pre: function ($scope, $element, $attrs, ctl) {
                         }
                     }
                 },
-                controllerAs: 'vm',
+                controllerAs: 'ourpalmTableController',
                 controller: function ($element, $scope, $attrs) {
                     var vm = this;
 
@@ -593,7 +593,7 @@
                                     <button class="ourpalm-table-pager" ng-disabled="table.context.currentPage == 1" ng-click="table.gotoFirstPage();"><i class="fa fa-step-backward"></i></button><!--首页-->
                                     <button class="ourpalm-table-pager" ng-disabled="table.context.currentPage == 1" ng-click="table.gotoPrePage();"><i class="fa fa-backward"></i></button><!-- 上一页-->
                                     第
-                                    <input type="number" ng-model="pagination.currPage" ng-keyup="table.gotoSkipPage($event);" ng-readonly="!table.context.skipPage" min="1" max="{{table.context.allPage}}" class="form-control input-sm" style="height:20px;line-height:20px;padding:0;margin-top:-2px;max-width:34px;display:inline-block;">
+                                    <input type="number" ng-model="ourpalmTablePaginationController.currPage" ng-keyup="table.gotoSkipPage($event);" ng-readonly="!table.context.skipPage" min="1" max="{{table.context.allPage}}" class="form-control input-sm" style="height:20px;line-height:20px;padding:0;margin-top:-2px;max-width:34px;display:inline-block;">
                                     页,共{{table.context.allPage}}页
                                     <button class="ourpalm-table-pager" ng-disabled="table.context.currentPage == table.context.allPage" ng-click="table.gotoNextPage();"><i class="fa fa-forward"></i></button><!-- 下一页-->
                                     <button class="ourpalm-table-pager" ng-disabled="table.context.currentPage == table.context.allPage" ng-click="table.gotoLastPage();"><i class="fa fa-step-forward"></i></button><!-- 尾页-->
@@ -613,7 +613,7 @@
                         $scope.currPage = newValue;
                     })
                 },
-                controllerAs: 'pagination',
+                controllerAs: 'ourpalmTablePaginationController',
                 controller: function ($scope) {
                     var vm = this;
                     $scope.$watch(function () {

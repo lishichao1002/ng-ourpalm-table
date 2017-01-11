@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>angular table</title>
+    <link href="http://cdn.bootcss.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="http://cdn.bootcss.com/bootstrap/3.3.0/css/bootstrap-theme.min.css" rel="stylesheet">
+    <link href="http://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../ourpalm-table.css">
+</head>
+<body>
+
+<div class="container" ng-controller="DemoController as vm">
+    <h2>测试angular指令的作用域！</h2>
+
+    <div style="background-color:pink;" scope-true>
+        <h1>scope true</h1>
+        <button ng-click="show();">scope.show();</button>
+        <button ng-click="vm.show();">vm.show();</button>
+
+        <h2>嵌套ng-repeat</h2>
+        <div ng-repeat="i in [0]">
+            <button ng-click="show();">scope.show();</button>
+            <button ng-click="vm.show();">vm.show();</button>
+        </div>
+    </div>
+
+    <div style="background-color:hotpink;" scope-false>
+        <h1>scope false</h1>
+        <button ng-click="show();">scope.show();</button>
+        <button ng-click="vm.show();">vm.show();</button>
+
+        <h2>嵌套ng-repeat</h2>
+        <div ng-repeat="i in [0]">
+            <button ng-click="show();">scope.show();</button>
+            <button ng-click="vm.show();">vm.show();</button>
+        </div>
+    </div>
+
+    <div style="background-color:paleturquoise;" scope-object>
+        <h1>scope object</h1>
+        <button ng-click="show();">scope.show();</button>
+        <button ng-click="vm.show();">vm.show();</button>
+
+        <h2>嵌套ng-repeat</h2>
+        <div ng-repeat="i in [0]">
+            <button ng-click="show();">scope.show();</button>
+            <button ng-click="vm.show();">vm.show();</button>
+        </div>
+    </div>
+
+</div>
+
+
+<script type="text/javascript" src="http://cdn.bootcss.com/jquery/1.11.1/jquery.min.js"></script>
+<script type="text/javascript" src="http://cdn.bootcss.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="http://cdn.bootcss.com/angular.js/1.5.6/angular.min.js"></script>
+<script type="text/javascript" src="../ourpalm-table.js"></script>
+<script>
+
+    angular
+        .module('app', ['ourpalm-table'])
+        .directive('scopeTrue', function () {
+            return {
+                restrict: 'AE',
+                scope: true
+            }
+        })
+        .directive('scopeFalse', function () {
+            return {
+                restrict: 'AE',
+                scope: false
+            }
+        })
+        .directive('scopeObject', function () {
+            return {
+                restrict: 'AE',
+                scope: {}
+            }
+        })
+        .controller('DemoController', function ($timeout, OurpalmTable, $scope) {
+            var vm = this;
+            var i = 0;
+
+            $scope.show = vm.show = function () {
+                console.info(`click${++i}`);
+            };
+        });
+
+    angular.bootstrap(document, ['app']);
+
+</script>
+
+</body>
+</html>
