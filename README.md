@@ -106,7 +106,7 @@
        class="table table-bordered table-striped table-hover text-center">
     <tr ng-repeat="$row in $rows">
         <td table-column header="全选" field="name" sort="false" checkbox="true" sort-order="asc" style="width:30px;"></td>
-        <td table-column header="序号" field="name" sort="false" rownumbers="true" sort-order="asc" hide="false" style="width:40px;"></td>
+        <td table-column header="序号" field="name" sort="false" rownumbers="true" sort-order="asc" show="true" style="width:40px;"></td>
         <td table-column header="姓名" field="name" sort="true" checkbox="false" sort-order="asc">{{$row.name}}</td>
         <td table-column header="年龄" field="age" sort="true" checkbox="false" sort-order="desc">{{$row.age}}</td>
         <td table-column header="邮箱" field="email" sort="false" checkbox="false" sort-order="desc">{{$row.email}}</td>
@@ -120,6 +120,9 @@
 
     vm.table = new OurpalmTable({
         //配置方式四
+        cacheKey: 'table01',
+        cachePageSize: true,
+        cacheColumns: true,
         skipPage: true,
         serverSort: false,
         pagination: true,
@@ -185,7 +188,7 @@
 |	pageList     		  |     array 		  |	[10,20,30,40,50]   |	在设置分页属性的时候 初始化页面大小选择列表		|
 |	defaultPageSize       |     int   		  |		10			   |	在设置分页属性的时候初始化页面大小	|
 |	skipPage              |     boolean   	  |		true		   |	在设置分页属性的时候是否允许用户跳转页面	|
-|	cacheKey              |     string   	  |		''  		   |	在设置分页属性的时候是否允许用户跳转页面	|
+|	cacheKey              |     string   	  |		''  		   |	客户端存储table信息是对应存放在localStorage中的key	|
 |	cachePageSize         |     boolean   	  |		false		   |	是否在客户端存储table的页大小,刷新的时候页大小不变,保存在localStorage中,key为${cacheKey}-pageSize	|
 |	cacheColumns          |     boolean   	  |		false		   |	是否在客户端存在table的列隐藏信息,刷新的时候列的隐藏信息不变,保存在localStorage中,key为${cacheKey}-columns	|
 
