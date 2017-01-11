@@ -3,24 +3,23 @@ body {
     font-size: 13px;
 }
 
-.modal-center {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    width: 90%;
-    max-width: 600px;
-    max-height: 90%;
-    overflow: auto;
-    border-radius: 4px;
-    transform: translate(-50%, -50%);
+.ourpalm-table-column {
+    max-width: 500px !important;
+    min-width: 400px !important;
 }
 
-.modal-center-lg {
-    max-width: 800px !important;
+.ourpalm-table-column .modal-body {
+    text-align: left;
 }
 
-.modal-center-sm {
-    max-width: 400px !important;
+.ourpalm-table-column .checkbox-inline {
+    width: 25%;
+    white-space: nowrap; /* 不换行 */
+    overflow: hidden;
+}
+
+.ourpalm-table-column .checkbox-inline + .checkbox-inline {
+    margin-left: 0px;
 }
 
 table td, table th {
@@ -53,8 +52,8 @@ table th {
 
 .ourpalm-dialog {
     position: fixed;
-    width: 30%;
-    height: 30%;
+    /*width: 30%;*/
+    /*height: 30%;*/
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);

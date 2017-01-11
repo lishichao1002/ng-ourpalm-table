@@ -553,19 +553,17 @@
                     <div ng-show="table.context.setColumns">
                         <div class="ourpalm-mask"></div>
                         <div class="ourpalm-dialog">
-                            <div class="modal-dialog">
-                                <div class="modal-content modal-center-sm">
-                                    <div class="modal-header">
-                                        <button type="button" class="close" data-dismiss="modal" ng-click="table.context.setColumns = false;">
-                                            <span aria-hidden="true">×</span>
-                                        </button>
-                                        <h4 class="modal-title">自定义列表项</h4>
-                                    </div>
-                                    <div class="modal-body">
-                                        <label class="checkbox-inline" ng-repeat="col in table.context.columns">
-                                            <input type="checkbox" ng-model="col.show" ng-click="table.toggleColumn();">{{col.header}}
-                                        </label>
-                                    </div>
+                            <div class="modal-content ourpalm-table-column">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" ng-click="table.context.setColumns = false;">
+                                        <span aria-hidden="true">×</span>
+                                    </button>
+                                    <h4 class="modal-title">自定义列表项</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <label class="checkbox-inline" ng-repeat="col in table.context.columns">
+                                        <input type="checkbox" ng-model="col.show" ng-click="table.toggleColumn();">{{col.header}}
+                                    </label>
                                 </div>
                             </div>
                         </div>
