@@ -8,7 +8,7 @@
     <link href="http://cdn.bootcss.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet">
     <link href="http://cdn.bootcss.com/bootstrap/3.3.0/css/bootstrap-theme.min.css" rel="stylesheet">
     <link href="http://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="../ourpalm-table.css">
+    <link rel="stylesheet" href="../src/ourpalm-table.css">
 </head>
 <body>
 
@@ -36,37 +36,37 @@
 <script>
 
     angular
-            .module('app', ['ourpalm-table'])
-            .controller('DemoController', function ($timeout, OurpalmTable) {
-                var vm = this;
+        .module('app', ['ourpalm-table'])
+        .controller('DemoController', function ($timeout, OurpalmTable) {
+            var vm = this;
 
-                vm.table = new OurpalmTable({
-                    loadData: function (table, callback) {
-                        var options = table.getOptions();
+            vm.table = new OurpalmTable({
+                loadData: function (table, callback) {
+                    var options = table.getOptions();
 
-                        var i = (options.currentPage - 1) * options.pageSize + 1;
-                        var size = i + options.pageSize;
-                        size = size > 86 ? 86 : size;
-                        //构造服务器假数据
-                        var rows = [];
-                        for (; i < size; i++) {
-                            rows.push({
-                                name: `zhangsan${i}`,
-                                age: i,
-                                email: `zhangsan${i}@163.com`
-                            });
-                        }
-
-                        $timeout(function () {
-                            callback({
-                                total: 86,
-                                rows: rows
-                            });
-                        }, 300);
+                    var i = (options.currentPage - 1) * options.pageSize + 1;
+                    var size = i + options.pageSize;
+                    size = size > 86 ? 86 : size;
+                    //构造服务器假数据
+                    var rows = [];
+                    for (; i < size; i++) {
+                        rows.push({
+                            name: `zhangsan${i}`,
+                            age: i,
+                            email: `zhangsan${i}@163.com`
+                        });
                     }
 
-                });
+                    $timeout(function () {
+                        callback({
+                            total: 86,
+                            rows: rows
+                        });
+                    }, 300);
+                }
+
             });
+        });
 
     angular.bootstrap(document, ['app']);
 

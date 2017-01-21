@@ -120,9 +120,9 @@
 
     vm.table = new OurpalmTable({
         //配置方式四
-        cacheKey: 'table01',
-        cachePageSize: true,
-        cacheColumns: true,
+        cacheKey: 'table01', //配置客户端缓存
+        cachePageSize: true, //客户端记录设置的页大小
+        cacheColumns: true, //客户端记录设置的隐藏列与显示列
         skipPage: true,
         serverSort: false,
         pagination: true,
@@ -259,6 +259,6 @@
 
 
 
-![demo01.png](./img/demo01.png)
+![demo01.png](./demo/img/demo01.png)
 
-![demo01.png](./img/demo02.png)
+![demo01.png](./demo/img/demo02.png)
