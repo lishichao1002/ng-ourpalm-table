@@ -6,11 +6,11 @@
 ```xml
 <table ourpalm-table="vm.table" class="table table-bordered table-striped table-hover text-center">
     <tr ng-repeat="$row in $rows">
-        <td table-column header="全选" field="select" checkbox="true" style="width:30px;"></td>
-        <td table-column header="序号" field="number" rownumbers="true" style="width:40px;"></td>
-        <td table-column header="姓名" field="name">{{$row.name}}</td>
-        <td table-column header="年龄" field="age">{{$row.age}}</td>
-        <td table-column header="邮箱" field="email">{{$row.email}}</td>
+        <td header="全选" field="select" checkbox="true" style="width:30px;"></td>
+        <td header="序号" field="number" rownumbers="true" style="width:40px;"></td>
+        <td header="姓名" field="name">{{$row.name}}</td>
+        <td header="年龄" field="age">{{$row.age}}</td>
+        <td header="邮箱" field="email">{{$row.email}}</td>
     </tr>
 </table>
 ```
@@ -54,11 +54,11 @@
 ```xml
 <table ourpalm-table="vm.table" class="table table-bordered table-striped table-hover text-center">
     <tr ng-repeat="$row in $rows">
-        <td table-column header="全选" field="select" checkbox="true" style="width:30px;"></td>
-        <td table-column header="序号" field="number" rownumbers="true" style="width:40px;"></td>
-        <td table-column header="姓名" field="name">{{$row.name}}</td>
-        <td table-column header="年龄" field="age">{{$row.age}}</td>
-        <td table-column header="邮箱" field="email">{{$row.email}}</td>
+        <td header="全选" field="select" checkbox="true" style="width:30px;"></td>
+        <td header="序号" field="number" rownumbers="true" style="width:40px;"></td>
+        <td header="姓名" field="name">{{$row.name}}</td>
+        <td header="年龄" field="age">{{$row.age}}</td>
+        <td header="邮箱" field="email">{{$row.email}}</td>
     </tr>
 </table>
 ```
@@ -105,11 +105,11 @@
        server-load="false"
        class="table table-bordered table-striped table-hover text-center">
     <tr ng-repeat="$row in $rows">
-        <td table-column header="全选" field="name" sort="false" checkbox="true" sort-order="asc" style="width:30px;"></td>
-        <td table-column header="序号" field="name" sort="false" rownumbers="true" sort-order="asc" show="true" style="width:40px;"></td>
-        <td table-column header="姓名" field="name" sort="true" checkbox="false" sort-order="asc">{{$row.name}}</td>
-        <td table-column header="年龄" field="age" sort="true" checkbox="false" sort-order="desc">{{$row.age}}</td>
-        <td table-column header="邮箱" field="email" sort="false" checkbox="false" sort-order="desc">{{$row.email}}</td>
+        <td header="全选" field="name" sort="false" checkbox="true" sort-order="asc" style="width:30px;"></td>
+        <td header="序号" field="name" sort="false" rownumbers="true" sort-order="asc" show="true" style="width:40px;"></td>
+        <td header="姓名" field="name" sort="true" checkbox="false" sort-order="asc">{{$row.name}}</td>
+        <td header="年龄" field="age" sort="true" checkbox="false" sort-order="desc">{{$row.age}}</td>
+        <td header="邮箱" field="email" sort="false" checkbox="false" sort-order="desc">{{$row.email}}</td>
     </tr>
 </table>
 ```
@@ -243,8 +243,8 @@
  1. `<tr ng-repeat="$row in $rows"></tr>`
 
 * **checkbox**列和**rownumbers**列不支持排序，如：
- 1. `<td table-column header="全选" field="name" checkbox="true"></td>`
- 2. `<td table-column header="全选" field="name" rownumbers="true"></td>`
+ 1. `<td header="全选" field="name" checkbox="true"></td>`
+ 2. `<td header="全选" field="name" rownumbers="true"></td>`
 
 
 
