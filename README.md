@@ -228,6 +228,7 @@
 * 获取排序的列 `table.getSortColumns()`
 * 获取显示的列 `table.getDisplayedColumns()`
 * 获取显示的行 `table.getDisplayedRows()`
+* 重新加载数据 `table.reload()`
 
 *注意：所有数据为只读的，不要自己修改数据*
 
