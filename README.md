@@ -219,8 +219,8 @@
 |	getSelectedRows       |                   |		 获取选中的行信息				   |
 |	getSortColumns        |                   |		 获取排序的列信息				   |
 |	getOptions            |                   |		 获取表格的实时信息,如 currentPage, pageSize  |
-|	page                  |   int[可选]       |		 获取表格的当前页，获取设置表格的当前页  |
-|	size                  |   int[可选]       |		 获取表格的当前页大小，获取设置表格的当前页大小  |
+|	page                  |   int[可选]       |		 获取表格的当前页，或者设置表格的当前页  |
+|	size                  |   int[可选]       |		 获取表格的当前页大小，或者设置表格的当前页大小  |
 
 
 
