@@ -191,6 +191,7 @@
 |	cacheKey              |     string   	  |		''  		   |	客户端存储table信息是对应存放在localStorage中的key	|
 |	cachePageSize         |     boolean   	  |		false		   |	是否在客户端存储table的页大小,刷新的时候页大小不变,保存在localStorage中,key为${cacheKey}-pageSize	|
 |	cacheColumns          |     boolean   	  |		false		   |	是否在客户端存在table的列隐藏信息,刷新的时候列的隐藏信息不变,保存在localStorage中,key为${cacheKey}-columns	|
+|	pagePosition          |     string   	  |		bottom		   |	分页条在那里显示可取值 'bottom', 'top', 'both'	|
 
 
 
@@ -218,6 +219,8 @@
 |	getSelectedRows       |                   |		 获取选中的行信息				   |
 |	getSortColumns        |                   |		 获取排序的列信息				   |
 |	getOptions            |                   |		 获取表格的实时信息,如 currentPage, pageSize  |
+|	page                  |   int[可选]       |		 获取表格的当前页，获取设置表格的当前页  |
+|	size                  |   int[可选]       |		 获取表格的当前页大小，获取设置表格的当前页大小  |
 
 
 
@@ -229,6 +232,10 @@
 * 获取显示的列 `table.getDisplayedColumns()`
 * 获取显示的行 `table.getDisplayedRows()`
 * 重新加载数据 `table.reload()`
+* 获取当前第几页 `table.page()`
+* 设置当前第几页 `table.page(10)`
+* 获取当前分页大小 `table.size()`
+* 设置当前分页大小 `table.size(100)`
 
 *注意：所有数据为只读的，不要自己修改数据*
 

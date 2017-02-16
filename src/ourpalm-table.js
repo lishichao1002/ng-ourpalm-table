@@ -27,7 +27,8 @@
                 skipPage: true, //是否允许分页控件中跳转页
                 cacheKey: '', //指定cache时的key
                 cachePageSize: false, //是否缓存页大小
-                cacheColumns: false //是否缓存列的隐藏显示
+                cacheColumns: false, //是否缓存列的隐藏显示
+                pagePosition: 'bottom' // top | bottom | both
             };
 
             this.setOptions = function (opts) {
@@ -126,6 +127,27 @@
                     reload();
                 };
 
+                table.page = function (page) {
+                    if (page && typeof page === 'number') {
+                        page = page > 1 ? page : 1;
+                        context.currentPage = page;
+                        __loadData();
+                    } else {
+                        return context.currentPage;
+                    }
+                };
+
+                table.size = function (size) {
+                    if (size && typeof size === 'number') {
+                        if (size > 0) {
+                            context.pageSize = size;
+                            __loadData();
+                        }
+                    } else {
+                        return context.pageSize;
+                    }
+                };
+
 
                 /* 私有方法 private */
 
@@ -216,6 +238,11 @@
                     var end = (start + context.pageSize) > context.total ? context.total : (start + context.pageSize);
                     context.rows = context.data.copy(start, end);
                     context.allPage = context.total % context.pageSize == 0 ? context.total / context.pageSize : (parseInt(context.total / context.pageSize + 1));
+
+                    start = (context.currentPage - 1) * context.pageSize + 1;
+                    context.startPage = (context.currentPage <= 1 && context.rows.length == 0) ? 0 : context.currentPage;
+                    context.start = context.startPage == 0 ? 0 : start;
+
                     //复选框默认未选中
                     context.allBoxChecked = false;
                     onHeaderCheckBoxChange();
@@ -232,6 +259,10 @@
                     context.total = result.total;
                     context.rows = result.rows;
                     context.allPage = context.total % context.pageSize == 0 ? context.total / context.pageSize : (parseInt(context.total / context.pageSize + 1));
+
+                    var start = (context.currentPage - 1) * context.pageSize + 1;
+                    context.startPage = (context.currentPage <= 1 && context.rows.length == 0) ? 0 : context.currentPage;
+                    context.start = context.startPage == 0 ? 0 : start;
                     //复选框默认未选中
                     context.allBoxChecked = false;
                     onHeaderCheckBoxChange();
@@ -439,8 +470,15 @@
                         return columns;
                     };
                     columns = getColumns($element);
-                    $element.prepend('<ourpalm-table-header table="ourpalmTableController.table"></ourpalm-table-header>');
-                    $element.append('<ourpalm-table-pagination table="ourpalmTableController.table"></ourpalm-table-pagination>');
+
+                    var $thead = $('<thead></thead>'), $tfoot = $('<tfoot></tfoot>');
+                    $thead.prepend('<ourpalm-table-header table="ourpalmTableController.table"></ourpalm-table-header>');
+                    $thead.prepend('<tr ourpalm-table-pagination table="ourpalmTableController.table" position="top"></tr>');
+                    $element.prepend($thead);
+
+                    $tfoot.prepend('<tr ourpalm-table-pagination table="ourpalmTableController.table" position="bottom"></tr>');
+                    $element.append($tfoot);
+
                     $element.append('<ourpalm-table-set-columns table="ourpalmTableController.table"></ourpalm-table-set-columns>');
                     return {
                         pre: function ($scope, $element, $attrs, ctl) {
@@ -473,6 +511,7 @@
                     parseAttrs(pageOptions, 'cacheKey');
                     parseAttrs(pageOptions, 'cachePageSize');
                     parseAttrs(pageOptions, 'cacheColumns');
+                    parseAttrs(pageOptions, 'pagePosition');
 
                     var table = $parse($attrs.ourpalmTable)($scope.$parent); //获取table的共有方法
                     vm.table = table.__table__()(defaultOpts, pageOptions); //获取table的私有方法
@@ -501,40 +540,38 @@
                     table: '='
                 },
                 template: `
-                    <thead>
-                        <tr>
-                            <th ng-repeat="col in table.context.columns" ng-show="col.show">
-                                <!-- 非 checkbox 列 -->  
-                                <span ng-if="col.checkbox == false" class="ourpalm-table-header-sort">
-                                    <!-- 非序号列 -->
-                                    <span ng-if="col.rownumbers == false">
-                                        <!-- 排序列 -->
-                                        <span ng-if="col.sort == true"> 
-                                            <a href="javascript:void(0);" ng-hide="col.sortOrder" ng-click="table.sortColumn(col, $index);">{{col.header}}</a>
-                                            <a href="javascript:void(0);" ng-show="col.sortOrder == 'asc'" ng-click="table.sortColumn(col, $index);">{{col.header}}<i class="fa fa-caret-down"></i></a>
-                                            <a href="javascript:void(0);" ng-show="col.sortOrder == 'desc'" ng-click="table.sortColumn(col, $index);">{{col.header}}<i class="fa fa-caret-up"></i></a>
-                                        </span>
-                                        
-                                        <!-- 非排序列 -->
-                                        <span ng-if="col.sort == false">
-                                            {{col.header}}
-                                        </span>
+                    <tr>
+                        <th ng-repeat="col in table.context.columns" ng-show="col.show">
+                            <!-- 非 checkbox 列 -->  
+                            <span ng-if="col.checkbox == false" class="ourpalm-table-header-sort">
+                                <!-- 非序号列 -->
+                                <span ng-if="col.rownumbers == false">
+                                    <!-- 排序列 -->
+                                    <span ng-if="col.sort == true"> 
+                                        <a href="javascript:void(0);" ng-hide="col.sortOrder" ng-click="table.sortColumn(col, $index);">{{col.header}}</a>
+                                        <a href="javascript:void(0);" ng-show="col.sortOrder == 'asc'" ng-click="table.sortColumn(col, $index);">{{col.header}}<i class="fa fa-caret-down"></i></a>
+                                        <a href="javascript:void(0);" ng-show="col.sortOrder == 'desc'" ng-click="table.sortColumn(col, $index);">{{col.header}}<i class="fa fa-caret-up"></i></a>
                                     </span>
                                     
-                                    <!-- 序号列 -->
-                                    <span ng-if="col.rownumbers == true">
+                                    <!-- 非排序列 -->
+                                    <span ng-if="col.sort == false">
                                         {{col.header}}
                                     </span>
-                                    
                                 </span>
                                 
-                                <!-- checkbox 列 --> 
-                                <span ng-if="col.checkbox == true">
-                                    <input type="checkbox" ng-model="table.context.allBoxChecked" ng-change="table.onHeaderCheckBoxChange();">
+                                <!-- 序号列 -->
+                                <span ng-if="col.rownumbers == true">
+                                    {{col.header}}
                                 </span>
-                            </th>
-                        </tr>
-                    </thead>
+                                
+                            </span>
+                            
+                            <!-- checkbox 列 --> 
+                            <span ng-if="col.checkbox == true">
+                                <input type="checkbox" ng-model="table.context.allBoxChecked" ng-change="table.onHeaderCheckBoxChange();">
+                            </span>
+                        </th>
+                    </tr>
                  `,
                 replace: true
             }
@@ -582,42 +619,40 @@
             return {
                 restrict: 'AE',
                 scope: {
-                    table: '='
+                    table: '=',
+                    position: '@'
                 },
                 template: `
-                    <tfoot>
-                        <tr ng-if="table.context.pagination">
-                            <td colspan="{{table.context.columns.length}}">
-                                <span style="float:left;">
-                                    <select ng-model="table.context.pageSize" class="form-control input-sm" ng-options="pageSize for pageSize in table.context.pageList" ng-change="table.changePageSize();" class="form-control input-sm" style="height:20px;line-height:20px;padding:0;margin-top:-2px;max-width:50px;display:inline-block;"></select>
-                                    <button class="ourpalm-table-pager" ng-disabled="table.context.currentPage == 1" ng-click="table.gotoFirstPage();"><i class="fa fa-step-backward"></i></button><!--首页-->
-                                    <button class="ourpalm-table-pager" ng-disabled="table.context.currentPage == 1" ng-click="table.gotoPrePage();"><i class="fa fa-backward"></i></button><!-- 上一页-->
-                                    第
-                                    <input type="number" ng-model="ourpalmTablePaginationController.currPage" ng-keyup="table.gotoSkipPage($event);" ng-readonly="!table.context.skipPage" min="1" max="{{table.context.allPage}}" class="form-control input-sm" style="height:20px;line-height:20px;padding:0;margin-top:-2px;max-width:34px;display:inline-block;">
-                                    页,共{{table.context.allPage}}页
-                                    <button class="ourpalm-table-pager" ng-disabled="table.context.currentPage == table.context.allPage" ng-click="table.gotoNextPage();"><i class="fa fa-forward"></i></button><!-- 下一页-->
-                                    <button class="ourpalm-table-pager" ng-disabled="table.context.currentPage == table.context.allPage" ng-click="table.gotoLastPage();"><i class="fa fa-step-forward"></i></button><!-- 尾页-->
-                                    <button class="ourpalm-table-pager" ng-click="table.reload();"><i class="fa fa-refresh"></i></button><!--刷新-->
-                                    <button class="ourpalm-table-pager" ng-click="table.context.setColumns = true;"><i class="fa fa-gear"></i></button><!--自定义列表项-->
-                                </span>
-                                <span style="float:right;">显示{{(table.context.currentPage - 1) * table.context.pageSize + 1}} / {{(table.context.currentPage * table.context.pageSize > table.context.total ? table.context.total : (table.context.currentPage * table.context.pageSize))}}条记录 ，共{{table.context.total}}条记录</span>
-                            </td>
-                        </tr>
-                    </tfoot>
+                    <td ng-if="ourpalmTablePaginationController.pagination" colspan="{{table.context.columns.length}}">
+                        <span style="float:left;">
+                            <select ng-model="table.context.pageSize" class="form-control input-sm" ng-options="pageSize for pageSize in table.context.pageList" ng-change="table.changePageSize();" class="form-control input-sm" style="height:20px;line-height:20px;padding:0;margin-top:-2px;max-width:50px;display:inline-block;"></select>
+                            <button class="ourpalm-table-pager" ng-disabled="table.context.currentPage == 1" ng-click="table.gotoFirstPage();"><i class="fa fa-step-backward"></i></button><!--首页-->
+                            <button class="ourpalm-table-pager" ng-disabled="table.context.currentPage == 1" ng-click="table.gotoPrePage();"><i class="fa fa-backward"></i></button><!-- 上一页-->
+                            第
+                            <input type="number" ng-model="ourpalmTablePaginationController.currPage" ng-keyup="table.gotoSkipPage($event);" ng-readonly="!table.context.skipPage" min="1" max="{{table.context.allPage}}" class="form-control input-sm" style="height:20px;line-height:20px;padding:0;margin-top:-2px;max-width:34px;display:inline-block;">
+                            页,共{{table.context.allPage}}页
+                            <button class="ourpalm-table-pager" ng-disabled="table.context.currentPage >= table.context.allPage" ng-click="table.gotoNextPage();"><i class="fa fa-forward"></i></button><!-- 下一页-->
+                            <button class="ourpalm-table-pager" ng-disabled="table.context.currentPage >= table.context.allPage" ng-click="table.gotoLastPage();"><i class="fa fa-step-forward"></i></button><!-- 尾页-->
+                            <button class="ourpalm-table-pager" ng-click="table.reload();"><i class="fa fa-refresh"></i></button><!--刷新-->
+                            <button class="ourpalm-table-pager" ng-click="table.context.setColumns = true;"><i class="fa fa-gear"></i></button><!--自定义列表项-->
+                        </span>
+                        <span style="float:right;">显示{{table.context.start}}-{{(table.context.currentPage * table.context.pageSize > table.context.total ? table.context.total : (table.context.currentPage * table.context.pageSize))}}条记录 ，共{{table.context.total}}条记录</span>
+                    </td>
                 `,
-                replace: true,
-                link: function ($scope, $element, $attrs, table) {
-                    $scope.$watch(function () {
-                        return $scope.table.context.currentPage;
-                    }, function (newValue) {
-                        $scope.currPage = newValue;
-                    })
-                },
+                replace: false,
                 controllerAs: 'ourpalmTablePaginationController',
                 controller: function ($scope) {
                     var vm = this;
+                    var table = $scope.table;
+
+                    if (table.context.pagination && (table.context.pagePosition == 'both' || table.context.pagePosition == $scope.position)) {
+                        vm.pagination = true;
+                    } else {
+                        vm.pagination = false;
+                    }
+
                     $scope.$watch(function () {
-                        return $scope.table.context.currentPage;
+                        return $scope.table.context.startPage;
                     }, function (newValue) {
                         vm.currPage = newValue;
                     });
