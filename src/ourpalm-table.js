@@ -416,8 +416,6 @@
          * <table ourpalm-table="vm.loadData(params, callback);" pagination="true" single-select="false" page-position="bottom" page-list="[10, 30, 50, 100]" default-page-size="30"></table>
          */
         .directive('ourpalmTable', function ($parse, ourpalmTable, $compile, $timeout) {
-            var columns = [];
-
             return {
                 restrict: 'AE',
                 priority: 1001,
@@ -469,19 +467,18 @@
                         });
                         return columns;
                     };
-                    columns = getColumns($element);
-
+                    var columns = getColumns($element);
                     var $thead = $('<thead></thead>'), $tfoot = $('<tfoot></tfoot>');
                     $thead.prepend('<ourpalm-table-header table="ourpalmTableController.table"></ourpalm-table-header>');
                     $thead.prepend('<tr ourpalm-table-pagination table="ourpalmTableController.table" position="top"></tr>');
                     $element.prepend($thead);
-
                     $tfoot.prepend('<tr ourpalm-table-pagination table="ourpalmTableController.table" position="bottom"></tr>');
                     $element.append($tfoot);
-
                     $element.append('<ourpalm-table-set-columns table="ourpalmTableController.table"></ourpalm-table-set-columns>');
                     return {
                         pre: function ($scope, $element, $attrs, ctl) {
+                            $scope.$columns = columns;
+                            $scope.init = true;
                         }
                     }
                 },
@@ -497,33 +494,38 @@
                         }
                     }
 
-                    var defaultOpts = ourpalmTable.options, pageOptions = {};
-                    parseAttrs(pageOptions, 'options', function (value) {
-                        angular.extend(pageOptions, value);
-                    });
-                    parseAttrs(pageOptions, 'pagination');
-                    parseAttrs(pageOptions, 'singleSelect');
-                    parseAttrs(pageOptions, 'serverSort');
-                    parseAttrs(pageOptions, 'pageList');
-                    parseAttrs(pageOptions, 'defaultPageSize');
-                    parseAttrs(pageOptions, 'skipPage');
-                    parseAttrs(pageOptions, 'serverLoad');
-                    parseAttrs(pageOptions, 'cacheKey');
-                    parseAttrs(pageOptions, 'cachePageSize');
-                    parseAttrs(pageOptions, 'cacheColumns');
-                    parseAttrs(pageOptions, 'pagePosition');
-
-                    var table = $parse($attrs.ourpalmTable)($scope.$parent); //获取table的共有方法
-                    vm.table = table.__table__()(defaultOpts, pageOptions); //获取table的私有方法
-                    columns = vm.table.buildColumns(columns);
-                    vm.table.registerDataChangeListener(function () {
-                        $timeout(function () {
-                            $scope.$rows = vm.table.context.rows;
+                    $scope.$watch(function () {
+                        return $scope.$columns;
+                    }, function () {
+                        var columns = $scope.$columns;
+                        var defaultOpts = ourpalmTable.options, pageOptions = {};
+                        parseAttrs(pageOptions, 'options', function (value) {
+                            angular.extend(pageOptions, value);
                         });
+                        parseAttrs(pageOptions, 'pagination');
+                        parseAttrs(pageOptions, 'singleSelect');
+                        parseAttrs(pageOptions, 'serverSort');
+                        parseAttrs(pageOptions, 'pageList');
+                        parseAttrs(pageOptions, 'defaultPageSize');
+                        parseAttrs(pageOptions, 'skipPage');
+                        parseAttrs(pageOptions, 'serverLoad');
+                        parseAttrs(pageOptions, 'cacheKey');
+                        parseAttrs(pageOptions, 'cachePageSize');
+                        parseAttrs(pageOptions, 'cacheColumns');
+                        parseAttrs(pageOptions, 'pagePosition');
+
+                        var table = $parse($attrs.ourpalmTable)($scope.$parent); //获取table的共有方法
+                        vm.table = table.__table__()(defaultOpts, pageOptions); //获取table的私有方法
+                        columns = vm.table.buildColumns(columns);
+                        vm.table.registerDataChangeListener(function () {
+                            $timeout(function () {
+                                $scope.$rows = vm.table.context.rows;
+                            });
+                        });
+                        $scope.$onRowCheckBoxChange = vm.table.onRowCheckBoxChange;
+                        $scope.$columns = columns;
+                        vm.table.initPage();
                     });
-                    $scope.$onRowCheckBoxChange = vm.table.onRowCheckBoxChange;
-                    $scope.$columns = columns;
-                    vm.table.initPage();
                 }
             }
         })
@@ -643,13 +645,16 @@
                 controllerAs: 'ourpalmTablePaginationController',
                 controller: function ($scope) {
                     var vm = this;
-                    var table = $scope.table;
-
-                    if (table.context.pagination && (table.context.pagePosition == 'both' || table.context.pagePosition == $scope.position)) {
-                        vm.pagination = true;
-                    } else {
-                        vm.pagination = false;
-                    }
+                    $scope.$watch(function () {
+                        return $scope.table;
+                    }, function () {
+                        var table = $scope.table;
+                        if (table.context.pagination && (table.context.pagePosition == 'both' || table.context.pagePosition == $scope.position)) {
+                            vm.pagination = true;
+                        } else {
+                            vm.pagination = false;
+                        }
+                    });
 
                     $scope.$watch(function () {
                         return $scope.table.context.startPage;

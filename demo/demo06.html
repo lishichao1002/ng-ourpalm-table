@@ -13,43 +13,29 @@
 <body>
 
 <div class="container" ng-controller="DemoController as vm">
-    <h2>测试angular指令的作用域！</h2>
+    <h1>hello angular ourpalm-table！</h1>
+    <h2>展示全部配置！</h2>
 
-    <div style="background-color:pink;" scope-true>
-        <h1>scope true</h1>
-        <button ng-click="show();">scope.show();</button>
-        <button ng-click="vm.show();">vm.show();</button>
+    <table ourpalm-table="vm.table" class="table table-bordered table-striped table-hover text-center">
+        <tr ng-repeat="$row in $rows" ng-dblclick="vm.show();">
+            <td table-column header="全选" field="select" sort="false" checkbox="true" sort-order="asc" style="width:30px;"></td>
+            <td table-column header="序号" field="numbers" sort="false" rownumbers="true" sort-order="asc" hide="false" style="width:40px;"></td>
+            <td table-column header="姓名" field="name" sort="true" checkbox="false" sort-order="asc">{{$row.name}}</td>
+        </tr>
+    </table>
 
-        <h2>嵌套ng-repeat</h2>
-        <div ng-repeat="i in [0]">
-            <button ng-click="show();">scope.show();</button>
-            <button ng-click="vm.show();">vm.show();</button>
-        </div>
-    </div>
-
-    <div style="background-color:hotpink;" scope-false>
-        <h1>scope false</h1>
-        <button ng-click="show();">scope.show();</button>
-        <button ng-click="vm.show();">vm.show();</button>
-
-        <h2>嵌套ng-repeat</h2>
-        <div ng-repeat="i in [0]">
-            <button ng-click="show();">scope.show();</button>
-            <button ng-click="vm.show();">vm.show();</button>
-        </div>
-    </div>
-
-    <div style="background-color:paleturquoise;" scope-object>
-        <h1>scope object</h1>
-        <button ng-click="show();">scope.show();</button>
-        <button ng-click="vm.show();">vm.show();</button>
-
-        <h2>嵌套ng-repeat</h2>
-        <div ng-repeat="i in [0]">
-            <button ng-click="show();">scope.show();</button>
-            <button ng-click="vm.show();">vm.show();</button>
-        </div>
-    </div>
+    <table ourpalm-table="vm.table1" class="table table-bordered table-striped table-hover text-center">
+        <tr ng-repeat="$row in $rows" ng-dblclick="vm.show();">
+            <td table-column header="全选" field="select" sort="false" checkbox="true" sort-order="asc" style="width:30px;"></td>
+            <td table-column header="序号" field="numbers" sort="false" rownumbers="true" sort-order="asc" hide="false" style="width:40px;"></td>
+            <td table-column header="姓名" field="name" sort="true" checkbox="false" sort-order="asc">{{$row.name}}</td>
+            <td table-column header="年龄" field="age" sort="true" checkbox="false" sort-order="desc">{{$row.age}}</td>
+            <td table-column header="邮箱" field="email" sort="false" checkbox="false" sort-order="desc">{{$row.email}}</td>
+            <td table-column header="操作" field="email" sort="false" checkbox="false" sort-order="desc">
+                <button ng-click="show();">详情</button>
+            </td>
+        </tr>
+    </table>
 
 </div>
 
@@ -57,36 +43,77 @@
 <script type="text/javascript" src="http://cdn.bootcss.com/jquery/1.11.1/jquery.min.js"></script>
 <script type="text/javascript" src="http://cdn.bootcss.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="http://cdn.bootcss.com/angular.js/1.5.6/angular.min.js"></script>
-<script type="text/javascript" src="../ourpalm-table.js"></script>
+<script type="text/javascript" src="../src/ourpalm-table.js"></script>
 <script>
 
     angular
         .module('app', ['ourpalm-table'])
-        .directive('scopeTrue', function () {
-            return {
-                restrict: 'AE',
-                scope: true
-            }
-        })
-        .directive('scopeFalse', function () {
-            return {
-                restrict: 'AE',
-                scope: false
-            }
-        })
-        .directive('scopeObject', function () {
-            return {
-                restrict: 'AE',
-                scope: {}
-            }
-        })
         .controller('DemoController', function ($timeout, OurpalmTable, $scope) {
             var vm = this;
-            var i = 0;
 
-            $scope.show = vm.show = function () {
-                console.info(`click${++i}`);
-            };
+            vm.table = new OurpalmTable({
+                cacheKey: 'table01',
+                cachePageSize: true,
+                cacheColumns: true,
+                pageList: [5, 10, 20, 30],
+                defaultPageSize: 5,
+                //data: rows, //内存加载数据
+                loadData: function (table, callback) {
+                    var options = table.getOptions();
+
+                    var i = (options.currentPage - 1) * options.pageSize + 1;
+                    var size = i + options.pageSize;
+                    size = size > 86 ? 86 : size;
+                    //构造服务器假数据
+                    var rows = [];
+                    for (; i < size; i++) {
+                        rows.push({
+                            name: `zhangsan${i}`,
+                            age: i,
+                            email: `zhangsan${i}@163.com`
+                        });
+                    }
+
+                    $timeout(function () {
+                        callback({
+                            total: 86,
+                            rows: rows
+                        });
+                    }, 300);
+                }
+            });
+
+            vm.table1 = new OurpalmTable({
+                cacheKey: 'table02',
+                cachePageSize: true,
+                cacheColumns: true,
+                pageList: [3, 5, 10, 20, 30],
+                defaultPageSize: 3,
+                //data: rows, //内存加载数据
+                loadData: function (table, callback) {
+                    var options = table.getOptions();
+
+                    var i = (options.currentPage - 1) * options.pageSize + 1;
+                    var size = i + options.pageSize;
+                    size = size > 86 ? 86 : size;
+                    //构造服务器假数据
+                    var rows = [];
+                    for (; i < size; i++) {
+                        rows.push({
+                            name: `zhangsan${i}`,
+                            age: i,
+                            email: `zhangsan${i}@163.com`
+                        });
+                    }
+
+                    $timeout(function () {
+                        callback({
+                            total: 86,
+                            rows: rows
+                        });
+                    }, 300);
+                }
+            });
         });
 
     angular.bootstrap(document, ['app']);

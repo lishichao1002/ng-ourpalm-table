@@ -6,6 +6,7 @@ body {
 .ourpalm-table-column {
     max-width: 500px !important;
     min-width: 400px !important;
+    border-radius: 0px;
 }
 
 .ourpalm-table-column .modal-body {
@@ -78,4 +79,14 @@ table th {
 
 .ourpalm-table-header-sort a:hover {
     text-decoration: underline;
+}
+
+.ourpalm-table-column .modal-body {
+    text-align: left;
+}
+
+.ourpalm-table-column .checkbox-inline {
+    width: 25%;
+    white-space: nowrap; /* 不换行 */
+    overflow: hidden;
 }
