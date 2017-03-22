@@ -1,8 +1,8 @@
-#angular-table
+## angular-table
 
 基于angular、bootstrap的表格控件，提供了一些简单的、声明式配置
 
-####以简单例子开始(服务器加载数据)
+#### 以简单例子开始(服务器加载数据)
 ```xml
 <table ourpalm-table="vm.table" class="table table-bordered table-striped table-hover text-center">
     <tr ng-repeat="$row in $rows">
@@ -50,7 +50,7 @@
 
 
 
-####以简单例子开始(内存指定数据)
+#### 以简单例子开始(内存加载数据)
 ```xml
 <table ourpalm-table="vm.table" class="table table-bordered table-striped table-hover text-center">
     <tr ng-repeat="$row in $rows">
@@ -88,7 +88,7 @@
 
 
 
-####全部配置项
+#### 全部配置项
 ```xml
 <table ourpalm-table="vm.table"
        //配置方式一
@@ -177,7 +177,7 @@
 
 
 
-####表属性
+#### 表属性
 
 |	属性名				  |	 属性值类型 		  | 	   默认值 	   |		描述 					|
 |-------------------------|-------------------|--------------------|-----------------------------|
@@ -196,7 +196,7 @@
 
 
 
-####列属性
+#### 列属性
 
 |	属性名				  |	 属性值类型 		  | 	   默认值 	   |		描述 					|
 |-------------------------|-------------------|--------------------|-----------------------------|
@@ -210,7 +210,7 @@
 
 
 
-####方法
+#### 方法
 
 |	方法名				  |	 参数 		      | 	            	描述 					|
 |-------------------------|-------------------|-------------------------------------------------|
@@ -224,7 +224,7 @@
 
 
 
-####获取table值
+#### 获取table值
 * 获取当前页 `table.getOptions().currentPage`
 * 获取页大小 `table.getOptions().pageSize`
 * 获取选中的行 `table.getSelectedRows()`
@@ -241,7 +241,7 @@
 
 
 
-####命名注意
+#### 命名注意
 
 * 表属性和列属性的名字，在html标签中将驼峰命名改为-分隔命名，如：
  1. `<td pageList="[10,20,30]"></td>` 应写为 `<td page-list="[10,20,30]"></td>`
@@ -256,7 +256,7 @@
 
 
 
-####demo
+#### demo
 
 [简单配置-服务器加载数据](./demo/demo01.html) [在线实例](http://runjs.cn/code/nwygfmro)
 
